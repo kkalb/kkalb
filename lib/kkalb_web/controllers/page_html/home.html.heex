@@ -38,6 +38,23 @@
       </div>
     <% end %>
   </div>
+
+  <% chart_headings = %{headings: ["HEADING"]} %>
+  <% chart_labels = %{labels: 0..5 |> Enum.to_list()} %>
+  <% chart_values = %{values: [1, 3, 7, 4, 1]} %>
+  <% title = %{title: "Test Chart"} %>
+
+  <%= Phoenix.HTML.Tag.content_tag(:canvas, "",
+    id: "line_chart",
+    name: "line_chart",
+    class: "justify-center items-center h-full w-full",
+    "phx-update": "ignore",
+    "phx-hook": "LineChart",
+    "data-chart-values": Jason.encode!(chart_values),
+    "data-chart-labels": Jason.encode!(chart_labels),
+    "data-chart-headings": Jason.encode!(chart_headings),
+    "data-chart-title": Jason.encode!(title)
+  ) %>
 </main>
 
 <footer class="bg-cgray border-t w-full border-cgray h-20 fixed bottom-0 left-0 right-0 z-30 shadow text-cwhite">

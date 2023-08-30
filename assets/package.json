@@ -1,7 +1,6 @@
 {
     "dependencies": {
-      "particles.js": "^2.0.0"
-    },
-    "devDependencies": {
+        "chart.js": "^4.4.0",
+        "particles.js": "^2.0.0"
     }
-  }
+}
