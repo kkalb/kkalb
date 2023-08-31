@@ -16,12 +16,8 @@ defmodule KkalbWeb.Router do
 
   scope "/", KkalbWeb do
     pipe_through :browser
+    get("/", PageController, :home)
 
-    get "/", PageController, :home
+    live("/live", Live.Index)
   end
-
-  # Other scopes may use custom stacks.
-  # scope "/api", KkalbWeb do
-  #   pipe_through :api
-  # end
 end
