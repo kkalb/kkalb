@@ -28,7 +28,6 @@ class LineChart {
       datasets: [{
         label: headings[0],
         data: values,
-        fill: {value: 25},
         borderColor: corange,
       }]
     };
@@ -41,21 +40,21 @@ class LineChart {
           tension: {
             duration: 1000,
             easing: 'easeInSine',
-            from: 0.6,
-            to: 0.4,
+            from: 0.1,
+            to: 0.7,
             loop: true
           }
         },
         responsive: true,
         // default is true
-        maintainAspectRatio: true,
+        maintainAspectRatio: false,
         plugins: {
           title: {
             display: true,
             text: title,
           },
           legend: {
-            display: false,
+            display: true,
             position: "top",
           },
         },
