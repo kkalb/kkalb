@@ -39,13 +39,15 @@
     <% end %>
   </div>
   <div class="w-full flex justify-center items-center rounded-xl flex-col">
-    <.simple_form for={%{}} phx-change="change_elements_to_query" class="w-full md:w-1/2">
+    <.simple_form for={%{}} phx-change="change_elements_to_query" class="w-1/2">
+      <.label>
+        TEST
+      </.label>
       <.input
         type="number"
         name="change_elements_to_query"
         value={@elements_to_query}
         phx-validate="test"
-        style="color: white; font-size: 16px; background-color: rgb(79 93 117); border: 2px solid white; border-radius: 6px;"
       />
     </.simple_form>
     <div class="h-72 mx-2 w-1/2">

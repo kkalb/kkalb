@@ -1,4 +1,7 @@
 defmodule KkalbWeb.Live.Index do
+  @moduledoc """
+  Callbacks for handling data for /live path
+  """
   use KkalbWeb, :live_view
 
   alias KkalbWeb.Live.Chart
@@ -7,23 +10,44 @@ defmodule KkalbWeb.Live.Index do
   def mount(_params, _session, socket) do
     elements_to_query = 10
 
-    if connected?(socket) do
-      socket = build_chart(socket, elements_to_query)
+    default_chart_data = %{
+      chart_headings: %{headings: ["Pulling data..."]},
+      chart_labels: %{labels: [""]},
+      chart_values: %{values: []},
+      chart_title: "Pulling data..."
+    }
 
-      {:ok,
-       socket
-       |> assign(elements_to_query: elements_to_query)}
-    else
-      {:ok,
-       %{
-         chart_headings: %{headings: ["Pulling data..."]},
-         chart_labels: %{labels: [""]},
-         chart_values: %{values: []},
-         chart_title: "Pulling data..."
-       }
-       |> assign_chart_data(socket)
-       |> assign(elements_to_query: elements_to_query)}
+    if connected?(socket) do
+      send(self(), {:fetch_from_api, elements_to_query})
     end
+
+    {:ok,
+     default_chart_data
+     |> assign_chart_data(socket)
+     |> assign(elements_to_query: elements_to_query)}
+  end
+
+  @impl true
+  def handle_info({:fetch_from_api, elements}, socket) do
+    view = self()
+
+    Task.start(fn ->
+      chart_data =
+        elements
+        |> request_github()
+        |> Map.get(:body)
+        |> Jason.decode!()
+        |> transform()
+
+      send(view, {:fetch_from_api_complete, chart_data})
+    end)
+
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_info({:fetch_from_api_complete, chart_data}, socket) do
+    {:noreply, chart_data |> assign_chart_data(socket) |> assign(loading: false)}
   end
 
   defp request_github(elements_to_query) do
