@@ -8,7 +8,7 @@ defmodule KkalbWeb.Live.Index do
 
   @impl true
   def mount(_params, _session, socket) do
-    elements_to_query = 10
+    elements_to_query = 3
 
     default_chart_data = %{
       chart_headings: %{headings: ["Pulling data..."]},

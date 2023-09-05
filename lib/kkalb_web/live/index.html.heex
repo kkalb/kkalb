@@ -5,7 +5,7 @@
     Kevin Kalb
   </h1>
 
-  <div class="h-40 flex flex-row gap-2 justify-center items-center">
+  <div class="h-40 flex flex-col md:flex-row gap-2 justify-center items-center">
     <%= for _ <- 0..2 do %>
       <div class="
       group 
@@ -41,7 +41,7 @@
   <div class="w-full flex justify-center items-center rounded-xl flex-col">
     <.simple_form for={%{}} phx-change="change_elements_to_query" class="w-1/2">
       <.label>
-        TEST
+        Elements to query
       </.label>
       <.input
         type="number"
