@@ -60,7 +60,12 @@ defmodule Kkalb.MixProject do
       "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
       "assets.build": ["tailwind default", "esbuild default"],
       "assets.deploy": ["tailwind default --minify", "esbuild default --minify", "phx.digest"],
-      ps: ["assets.build", "phx.server"]
+      "copy.static.assets": [
+        "cmd rm -rf priv/static/images",
+        "cmd cp -r assets/images priv/static/images",
+        "cmd cp -r assets/particles.json priv/static/assets"
+      ],
+      ps: ["copy.static.assets", "phx.server"]
     ]
   end
 end
