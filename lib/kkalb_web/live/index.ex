@@ -89,7 +89,7 @@ defmodule KkalbWeb.Live.Index do
     latest_date =
       Enum.max_by(items, fn dates_map -> dates_map["created_at"] end, Date)["created_at"]
 
-    range = Date.range(latest_date, earliest_date)
+    range = Date.range(earliest_date, latest_date)
     labels = range |> Enum.to_list()
 
     values_diff =

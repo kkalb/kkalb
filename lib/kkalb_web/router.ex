@@ -19,5 +19,6 @@ defmodule KkalbWeb.Router do
     get("/", PageController, :home)
 
     live("/live", Live.Index)
+    live("/gameoflife", GameOfLife)
   end
 end
