@@ -57,7 +57,7 @@ defmodule KkalbWeb.Live.Index do
   end
 
   @impl true
-  def handle_event("change_elements_to_query", %{"change_elements_to_query" => elements}, socket) do
+  def handle_event("change_elements_to_query", %{"count" => elements}, socket) do
     {:noreply, socket |> assign(elements_to_query: elements) |> build_chart(elements)}
   end
 
