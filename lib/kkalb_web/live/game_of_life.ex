@@ -11,8 +11,14 @@ defmodule KkalbWeb.GameOfLife do
     w = Range.new(0, size - 1)
     w = Enum.to_list(w)
     cells = for row <- w, into: %{}, do: {row, build_row(w)}
+    timer_speed = "500"
 
-    {:ok, socket |> assign(cells: cells) |> assign(size: size) |> assign(timer_refs: [])}
+    {:ok,
+     socket
+     |> assign(cells: cells)
+     |> assign(size: size)
+     |> assign(timer_refs: [])
+     |> assign(timer_speed: timer_speed)}
   end
 
   defp build_row(row) do
@@ -92,7 +98,8 @@ defmodule KkalbWeb.GameOfLife do
   end
 
   def handle_event("start_timer", _, socket) do
-    {:ok, ref} = :timer.send_interval(1000, self(), :tick)
+    speed = String.to_integer(socket.assigns.timer_speed)
+    {:ok, ref} = :timer.send_interval(speed, self(), :tick)
     {:noreply, socket |> assign(timer_refs: [ref | socket.assigns.timer_refs])}
   end
 
@@ -103,6 +110,10 @@ defmodule KkalbWeb.GameOfLife do
     {:noreply, socket |> assign(timer_refs: refs)}
   end
 
+  def handle_event("change_speed", %{"speed" => timer_speed}, socket) do
+    {:noreply, socket |> assign(timer_speed: timer_speed)}
+  end
+
   defp revive(cells, x, y) do
     update_in(cells, [x, y], fn _ -> :alive end)
   end
@@ -110,25 +121,27 @@ defmodule KkalbWeb.GameOfLife do
   @impl Phoenix.LiveView
   def render(assigns) do
     ~H"""
-    <h1 class="flex justify-center text-[88px]/[120px] text-cwhite">
-      Kevin Kalb
+    <h1 class="flex justify-center text-[80px]/[100px] text-cwhite">
+      Game of Life
     </h1>
-    <div class="flex flex-row w-full border">
-      <div class="flex flex-col justify-center gap-4">
-        <.input type="range" class="w-1/2" name="slider" value="25" min="0" max="100" step="1" />
-        <.button phx-click="spawn" class="flex justify-center items-center w-40">
-          Spawn cell
-        </.button>
-        <.button phx-click="start_timer" class="flex justify-center items-center w-40">
-          Start timer
-        </.button>
-        <.button phx-click="stop_timer" class="flex justify-center items-center w-40">
-          Stop timer
-        </.button>
+
+    <div class="flex flex-col justify-center items-center w-full border border-cwhite">
+      <div class="flex flex-row justify-center items-center gap-4 w-96">
+        <div class="flex flex-row justify-between gap-4 w-full my-2">
+          <.button phx-click="spawn" class="">
+            Spawn cell
+          </.button>
+          <.button phx-click="start_timer" class="">
+            Start timer
+          </.button>
+          <.button phx-click="stop_timer" class="">
+            Stop timer
+          </.button>
+        </div>
       </div>
-      <div class="flex w-full items-center">
-        <div class="flex justify-center items-center w-full">
-          <grid class="grid grid-rows-40 grid-cols-40">
+      <div class="flex w-full items-center h-full w-full">
+        <div class="flex justify-center w-full h-full">
+          <grid class="grid grid-rows-40 grid-cols-40 h-full">
             <%= for {x_idx, row_data} <- @cells, {y_idx, cell} <- row_data do %>
               <div class="row-span-1 col-span-1 border w-4 h-4" id={"cell-#{x_idx}-#{y_idx}"}>
                 <%= if cell == :dead do %>
@@ -139,9 +152,24 @@ defmodule KkalbWeb.GameOfLife do
               </div>
             <% end %>
           </grid>
+
+          <.simple_form for={%{}} phx-change="change_speed" class="flex w-4 h-72">
+            <.input
+              type="range"
+              phx-debounce="500"
+              dir="vertical"
+              label="Speed"
+              name="speed"
+              value={@timer_speed}
+              min="100"
+              max="1000"
+              step="10"
+            />
+          </.simple_form>
         </div>
       </div>
     </div>
+
     <.footer />
     """
   end

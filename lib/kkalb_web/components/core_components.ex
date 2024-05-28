@@ -271,6 +271,10 @@ defmodule KkalbWeb.CoreComponents do
     values: ~w(checkbox color date datetime-local email file hidden month number password
                range radio search select tel text textarea time url week)
 
+  attr :dir, :string,
+    default: "horizontal",
+    values: ~w(horizontal vertical)
+
   attr :field, Phoenix.HTML.FormField,
     doc: "a form field struct retrieved from the form, for example: @form[:email]"
 
@@ -360,19 +364,43 @@ defmodule KkalbWeb.CoreComponents do
     """
   end
 
+  def input(%{type: "range", dir: "vertical"} = assigns) do
+    ~H"""
+    <div class="">
+      <div class="ml-6">
+        <.label for={@id}><%= @label %></.label>
+      </div>
+      <input
+        type={@type}
+        name={@name}
+        id={@id}
+        value={Phoenix.HTML.Form.normalize_value(@type, @value)}
+        style="writing-mode: vertical-lr; direction: rtl; vertical-align: bottom;"
+        class={[
+          "ml-4 w-full h-full rounded-lg accent-corange text-white focus:ring-0 sm:text-sm sm:leading-6",
+          "phx-no-feedback:border-zinc-300 phx-no-feedback:focus:border-zinc-400",
+          @errors == [] && "border-zinc-300 focus:border-zinc-400",
+          @errors != [] && "border-rose-400 focus:border-rose-400"
+        ]}
+        {@rest}
+      />
+      <.error :for={msg <- @errors}><%= msg %></.error>
+    </div>
+    """
+  end
+
   # range
   def input(%{type: "range"} = assigns) do
     ~H"""
-    <div phx-feedback-for={@name}>
+    <div phx-feedback-for={@name} class="w-full">
       <.label for={@id}><%= @label %></.label>
-
       <input
         type={@type}
         name={@name}
         id={@id}
         value={Phoenix.HTML.Form.normalize_value(@type, @value)}
         class={[
-          "mt-2 block w-full rounded-lg accent-corange text-white focus:ring-0 sm:text-sm sm:leading-6",
+          "flex mt-2 w-full rounded-lg accent-corange text-white focus:ring-0 sm:text-sm sm:leading-6",
           "phx-no-feedback:border-zinc-300 phx-no-feedback:focus:border-zinc-400",
           @errors == [] && "border-zinc-300 focus:border-zinc-400",
           @errors != [] && "border-rose-400 focus:border-rose-400"
@@ -412,11 +440,13 @@ defmodule KkalbWeb.CoreComponents do
   Renders a label.
   """
   attr :for, :string, default: nil
+  attr :color, :string, default: "text-cwhite"
+
   slot :inner_block, required: true
 
   def label(assigns) do
     ~H"""
-    <label for={@for} class="block text-sm font-semibold leading-6 text-cgray">
+    <label for={@for} class={"block text-sm font-semibold leading-6 #{@color}"}>
       <%= render_slot(@inner_block) %>
     </label>
     """
