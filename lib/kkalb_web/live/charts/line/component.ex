@@ -1,4 +1,7 @@
 defmodule KkalbWeb.Live.Chart.Line.Component do
+  @moduledoc """
+  Renders the line chart canvas.
+  """
   use Phoenix.Component
 
   def render(assigns) do

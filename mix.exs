@@ -44,7 +44,8 @@ defmodule Kkalb.MixProject do
       {:jason, "~> 1.2"},
       {:plug_cowboy, "~> 2.5"},
       {:credo, "~> 1.7", only: [:dev, :test], runtime: false},
-      {:httpoison, "~> 2.0"}
+      {:httpoison, "~> 2.0"},
+      {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false}
     ]
   end
 
@@ -63,7 +64,7 @@ defmodule Kkalb.MixProject do
       "copy.static.assets": [
         "cmd rm -rf priv/static/images",
         "cmd cp -r assets/images priv/static/images",
-        "cmd cp -r assets/particles.json priv/static/assets"
+        "cmd cp -r assets/js/particles.json priv/static/assets"
       ],
       ps: ["copy.static.assets", "phx.server"]
     ]
