@@ -220,13 +220,30 @@ defmodule KkalbWeb.CoreComponents do
 
   slot :inner_block, required: true
 
+  def button(%{rest: %{disabled: true}} = assigns) do
+    ~H"""
+    <button
+      type={@type}
+      class={[
+        "phx-submit-loading:opacity-75 rounded-lg border border-cwhite py-2 px-3",
+        "text-sm font-semibold leading-6 text-cwhite",
+        "cursor-not-allowed",
+        @class
+      ]}
+      {@rest}
+    >
+      <%= render_slot(@inner_block) %>
+    </button>
+    """
+  end
+
   def button(assigns) do
     ~H"""
     <button
       type={@type}
       class={[
-        "phx-submit-loading:opacity-75 rounded-lg bg-zinc-900 hover:bg-zinc-700 py-2 px-3",
-        "text-sm font-semibold leading-6 text-white active:text-white/80",
+        "phx-submit-loading:opacity-75 rounded-lg bg-corange/25 border border-corange hover:bg-zinc-700 py-2 px-3",
+        "text-sm font-semibold leading-6 text-cwhite active:text-cwhite/80",
         @class
       ]}
       {@rest}
@@ -728,7 +745,7 @@ defmodule KkalbWeb.CoreComponents do
 
   def footer(assigns) do
     ~H"""
-    <footer class="fixed bottom-0 bg-cgray/25 left-0 right-0 border-cgray h-20 shadow text-cwhite">
+    <footer class="fixed bottom-0 bg-cgray/25 left-0 right-0 border-cgray h-[10%] shadow text-cwhite">
       <ul class="flex flex-row justify-center mt-2 gap-x-4">
         <li class="">
           <a rel="noopener nofollow" target="_blank" href="https://github.com/kkalb">

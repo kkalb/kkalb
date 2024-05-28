@@ -27,12 +27,10 @@ module.exports = {
       gridTemplateColumns: {
         '20': 'repeat(20, minmax(0, 1fr))',
         '40': 'repeat(40, minmax(0, 1fr))',
-        'footer': '200px minmax(900px, 1fr) 100px',
       },
       gridTemplateRows: {
         '20': 'repeat(20, minmax(0, 1fr))',
         '40': 'repeat(40, minmax(0, 1fr))',
-        'layout': '200px minmax(900px, 1fr) 100px',
       }
     },
   },
