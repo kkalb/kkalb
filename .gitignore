@@ -35,3 +35,10 @@ kkalb-*.tar
 npm-debug.log
 /assets/node_modules/
 
+# terraform artifacts
+**/.terraform/*
+*.tfstate
+*.tfstate.*
+
+# build articats
+rel/overlays/bin/
