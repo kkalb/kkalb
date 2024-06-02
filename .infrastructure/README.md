@@ -37,3 +37,18 @@ Since I do not need python3 for anything else in this dev setup, I simply use th
 `gigalixir signup:google`
 
 `gigalixir login:google`
+
+Since I already have an production-ready app, I use \
+`gigalixir create -n kkalb --region europe-west1 --cloud gcp`
+
+Setting up remote repo with
+
+`gigalixir git:remote kkalb`
+
+I commit to my personal git all the changes with `*_build_pack` files and lastly, I also push to gigalixir repo with
+
+`git push gigalixir`
+
+I am scared that it just worked on the first try [kkalb.com](https://kkalb.gigalixirapp.com/gameoflife) \
+has SSL activated, took ~2 min since running the push command and is free..
+
