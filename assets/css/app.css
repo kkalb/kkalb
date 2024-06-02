@@ -2,6 +2,14 @@
 @import "tailwindcss/components";
 @import "tailwindcss/utilities";
 
+/* setting defaults */
+@layer base {
+    html {
+        line-height: 1.5;
+        font-weight: 400;
+    }
+}
+
 #particles-js {
     display: block;
     position: fixed;

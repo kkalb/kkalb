@@ -6,6 +6,15 @@ const fs = require("fs")
 const path = require("path")
 const defaultTheme = require('tailwindcss/defaultTheme')
 
+const fontFamily = defaultTheme.fontFamily;
+fontFamily['sans'] = [
+  '"PT Sans"',
+  'Roboto',
+  '-apple-system',
+  'BlinkMacSystemFont',
+  'system-ui',
+];
+
 module.exports = {
   content: [
     "./js/**/*.js",
@@ -13,9 +22,7 @@ module.exports = {
     "../lib/*_web/**/*.*ex"
   ],
   theme: {
-    fontFamily: {
-      sans: ["'Roboto'", ...defaultTheme.fontFamily.sans]
-    },
+    fontFamily: fontFamily,
     extend: {
       colors: {
         cdark: "#2D3142",
