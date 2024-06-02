@@ -127,6 +127,13 @@ resource "aws_ecs_task_definition" "app" {
         }
       ]
 
+      environment = [
+        {
+          name  = "PHX_HOST"
+          value = aws_lb.this.dns_name
+        }
+      ]
+
       secrets = [
         # The following config can be used if you don't want to specify a
         # domain and just use the whatever DNS hostname the load balancer has.
@@ -137,10 +144,6 @@ resource "aws_ecs_task_definition" "app" {
         # config :my_app_web, MyAppWeb.Endpoint,
         #   url: [host: uri.host, port: uri.port || 81],
         #
-        # {
-        #  name  = "MY_APP_HOST"
-        #  value = aws_lb.this.dns_name
-        # },
         {
           name      = "SECRET_KEY_BASE"
           valueFrom = aws_secretsmanager_secret_version.secret_key_base.arn

@@ -1,14 +1,27 @@
 # docker run -e SECRET_KEY_BASE=$SECRET_KEY_BASE \
 #     -e PHX_HOST='localhost' \
-#     -t kkalb_release
+#     -t kkalb
 
-# docker build . -t kkalb_release
+# docker build . -t kkalb
 
-ECR=192247731055.dkr.ecr.eu-central-1.amazonaws.com/kkalb
+REGION=eu-central-1
+REPO_NAME=kkalb
+ECR=192247731055.dkr.ecr.$REGION.amazonaws.com/$REPO_NAME
+TAG=latest
+
+# build image
+echo 'Building image...'
+docker build . -t $REPO_NAME
 
 # login to docker
-aws ecr get-login-password --region 'eu-central-1' | docker login --username AWS --password-stdin $ECR
+aws ecr get-login-password --region $REGION | docker login --username AWS --password-stdin $ECR
 
-docker tag $(docker images -q kkalb_release) $ECR:latest
+# tagging
+echo 'Tagging image...'
+docker tag $REPO_NAME:$TAG $ECR:$TAG
 
-docker push $ECR:latest
+# pushing to ECR
+echo 'Pushing image to AWS...'
+docker push $ECR:$TAG
+
+echo 'Success!'
