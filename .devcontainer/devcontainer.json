@@ -12,7 +12,8 @@
 			"extensions": [
 				"jakebecker.elixir-ls",
 				"ms-azuretools.vscode-docker",
-				"4ops.terraform"
+				"4ops.terraform",
+				"bradlc.vscode-tailwindcss"
 			]
 		}
 	},

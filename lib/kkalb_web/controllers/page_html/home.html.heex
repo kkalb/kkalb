@@ -1,23 +1,8 @@
 <div class="h-full w-full">
   <.flash_group flash={@flash} />
   <div class="flex flex-col items-center justify-center gap-y-4 h-full">
-    <a class="flex h-[5%] w-[40%] xl:w-[20%] lg:w-[25%] md:w-[30%] xs:w-[35%]" href="/live">
-      <button
-        style="animation: pulse 2s cubic-bezier(1, 1, 1, 1) infinite;"
-        class="w-full h-full text-xl bg-corange rounded-xl text-cwhite"
-      >
-        Portfolio
-      </button>
-    </a>
-
-    <a class="flex h-[5%] w-[40%] xl:w-[20%] lg:w-[25%] md:w-[30%] xs:w-[35%]" href="/gameoflife">
-      <button
-        style="animation: pulse 2s cubic-bezier(1, 1, 1, 1) infinite;"
-        class="w-full h-full text-xl bg-corange rounded-xl text-cwhite"
-      >
-        Game of Life
-      </button>
-    </a>
+    <.nav_button path="/live" text="Portfolio" />
+    <.nav_button path="/gameoflife" text="Game of Life" />
   </div>
   <.footer />
 </div>

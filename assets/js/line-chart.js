@@ -29,16 +29,19 @@ class LineChart {
         label: headings[0],
         data: values,
         borderColor: corange,
+        backgroundColor: csilver
       }]
     };
-    
+
+    Chart.defaults.color = cwhite;
+
     this.chart = new Chart(ctx, {
       type: "line",
       data: data,
       options: {
         animations: {
           tension: {
-            duration: 1000,
+            duration: 800,
             easing: 'easeInSine',
             from: 0.1,
             to: 0.7,
@@ -56,12 +59,18 @@ class LineChart {
           legend: {
             display: true,
             position: "top",
+            labels: {
+              color: cwhite,
+              font: {
+                color: cwhite
+              }
+            }
           },
         },
       },
     });
   }
-// used to update async. with new data point
+  // used to update async. with new data point
   addPoint(label, value) {
     const labels = this.chart.data.labels;
     const data = this.chart.data.datasets[0].data;

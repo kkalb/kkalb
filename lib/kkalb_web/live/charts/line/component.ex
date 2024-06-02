@@ -7,6 +7,7 @@ defmodule KkalbWeb.Live.Chart.Line.Component do
   def render(assigns) do
     ~H"""
     <canvas
+      class="bg-cgray rounded"
       id="line_chart"
       name="line_chart"
       phx-update="ignore"

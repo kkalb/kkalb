@@ -2,6 +2,7 @@ defmodule KkalbWeb.Live.Index do
   @moduledoc """
   Callbacks for handling data for /live path
   """
+  require Logger
   use KkalbWeb, :live_view
 
   alias KkalbWeb.Live.Chart
@@ -70,6 +71,11 @@ defmodule KkalbWeb.Live.Index do
     |> assign_chart_data(socket)
   end
 
+  defp transform(%{"message" => message}) do
+    Logger.info(message)
+    %{message: "API limit exceeded. Please wait for some seconds"}
+  end
+
   defp transform(query_result) do
     amount_issues = query_result |> Map.get("total_count")
 
@@ -122,6 +128,10 @@ defmodule KkalbWeb.Live.Index do
       chart_values: %{values: Enum.reverse(values)},
       chart_title: ""
     }
+  end
+
+  defp assign_chart_data(%{message: message}, socket) do
+    put_flash(socket, :error, message)
   end
 
   defp assign_chart_data(chart_data, socket) do

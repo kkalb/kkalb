@@ -11,11 +11,10 @@ Hooks.LineChart = {
     const { headings } = JSON.parse(this.el.dataset.chartHeadings);
     const { title } = JSON.parse(this.el.dataset.chartTitle);
 
-    this.el.height = 200;
     this.chart = new LineChart(this.el, labels, values, headings, title);
 
-    this.handleEvent("new-point", ({ label, value, sensor }) => {
-      if (this.chart.chart.canvas.id == sensor) {
+    this.handleEvent("new-point", ({ label, value, id }) => {
+      if (this.chart.chart.canvas.id == id) {
         this.chart.addPoint(label, value);
       }
     });
@@ -30,7 +29,6 @@ Hooks.LineChart = {
     const { headings } = JSON.parse(this.el.dataset.chartHeadings);
     const { title } = JSON.parse(this.el.dataset.chartTitle);
 
-    this.el.height = 100;
     this.chart = new LineChart(this.el, labels, values, headings, title);
   },
 };

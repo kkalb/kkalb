@@ -253,6 +253,20 @@ defmodule KkalbWeb.CoreComponents do
     """
   end
 
+  attr :path, :string, default: ""
+  attr :text, :string, default: ""
+  attr :class, :string, default: "flex h-[5%] w-[20%]"
+
+  def nav_button(assigns) do
+    ~H"""
+    <a class={@class} href={@path}>
+      <.button class="w-full">
+        <%= @text %>
+      </.button>
+    </a>
+    """
+  end
+
   @doc """
   Renders an input with label and error messages.
 
@@ -488,105 +502,19 @@ defmodule KkalbWeb.CoreComponents do
   Renders a header with title.
   """
   attr :class, :string, default: nil
+  attr :text, :string, required: true
 
   slot :inner_block, required: true
-  slot :subtitle
   slot :actions
 
   def header(assigns) do
     ~H"""
-    <header class={[@actions != [] && "flex items-center justify-between gap-6", @class]}>
-      <div>
-        <h1 class="text-lg font-semibold leading-8 text-zinc-800">
-          <%= render_slot(@inner_block) %>
-        </h1>
-
-        <p :if={@subtitle != []} class="mt-2 text-sm leading-6 text-zinc-600">
-          <%= render_slot(@subtitle) %>
-        </p>
-      </div>
-
-      <div class="flex-none"><%= render_slot(@actions) %></div>
+    <header class="flex flex-col items-center justify-center text-[40px]/[50px] text-cwhite h-[10%] mb-4">
+      <p><%= @text %></p>
+      <p :if={@inner_block != ""} class="text-[20px]/[25px] text-cwhite mb-4">
+        <%= render_slot(@inner_block) %>
+      </p>
     </header>
-    """
-  end
-
-  @doc ~S"""
-  Renders a table with generic styling.
-
-  ## Examples
-
-      <.table id="users" rows={@users}>
-        <:col :let={user} label="id"><%= user.id %></:col>
-        <:col :let={user} label="username"><%= user.username %></:col>
-      </.table>
-  """
-  attr :id, :string, required: true
-  attr :rows, :list, required: true
-  attr :row_id, :any, default: nil, doc: "the function for generating the row id"
-  attr :row_click, :any, default: nil, doc: "the function for handling phx-click on each row"
-
-  attr :row_item, :any,
-    default: &Function.identity/1,
-    doc: "the function for mapping each row before calling the :col and :action slots"
-
-  slot :col, required: true do
-    attr :label, :string
-  end
-
-  slot :action, doc: "the slot for showing user actions in the last table column"
-
-  def table(assigns) do
-    assigns =
-      with %{rows: %Phoenix.LiveView.LiveStream{}} <- assigns do
-        assign(assigns, row_id: assigns.row_id || fn {id, _item} -> id end)
-      end
-
-    ~H"""
-    <div class="overflow-y-auto px-4 sm:overflow-visible sm:px-0">
-      <table class="w-[40rem] mt-11 sm:w-full">
-        <thead class="text-sm text-left leading-6 text-zinc-500">
-          <tr>
-            <th :for={col <- @col} class="p-0 pr-6 pb-4 font-normal"><%= col[:label] %></th>
-
-            <th class="relative p-0 pb-4"><span class="sr-only"><%= gettext("Actions") %></span></th>
-          </tr>
-        </thead>
-
-        <tbody
-          id={@id}
-          phx-update={match?(%Phoenix.LiveView.LiveStream{}, @rows) && "stream"}
-          class="relative divide-y divide-zinc-100 border-t border-zinc-200 text-sm leading-6 text-zinc-700"
-        >
-          <tr :for={row <- @rows} id={@row_id && @row_id.(row)} class="group hover:bg-zinc-50">
-            <td
-              :for={{col, i} <- Enum.with_index(@col)}
-              phx-click={@row_click && @row_click.(row)}
-              class={["relative p-0", @row_click && "hover:cursor-pointer"]}
-            >
-              <div class="block py-4 pr-6">
-                <span class="absolute -inset-y-px right-0 -left-4 group-hover:bg-zinc-50 sm:rounded-l-xl" />
-                <span class={["relative", i == 0 && "font-semibold text-zinc-900"]}>
-                  <%= render_slot(col, @row_item.(row)) %>
-                </span>
-              </div>
-            </td>
-
-            <td :if={@action != []} class="relative w-14 p-0">
-              <div class="relative whitespace-nowrap py-4 text-right text-sm font-medium">
-                <span class="absolute -inset-y-px -right-4 left-0 group-hover:bg-zinc-50 sm:rounded-r-xl" />
-                <span
-                  :for={action <- @action}
-                  class="relative ml-4 font-semibold leading-6 text-zinc-900 hover:text-zinc-700"
-                >
-                  <%= render_slot(action, @row_item.(row)) %>
-                </span>
-              </div>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
     """
   end
 
@@ -743,9 +671,26 @@ defmodule KkalbWeb.CoreComponents do
     for {^field, {msg, opts}} <- errors, do: translate_error({msg, opts})
   end
 
+  attr :class, :string, default: ""
+
+  def sidebar(assigns) do
+    ~H"""
+    <div class={"text-cwhite bg-cgray/80 border-r border-corange/40 " <> @class}>
+      <nav id="sidebar" class="flex flex-col h-full w-full p-4 gap-4">
+        <h1 class="text-[30px]/[60px]">
+          Nav
+        </h1>
+        <.nav_button class="h-8 w-32" path="/" text="Main" />
+        <.nav_button class="h-8 w-32" path="/live" text="Portfolio" />
+        <.nav_button class="h-8 w-32" path="/gameoflife" text="Game of Life" />
+      </nav>
+    </div>
+    """
+  end
+
   def footer(assigns) do
     ~H"""
-    <footer class="fixed bottom-0 bg-cgray/25 left-0 right-0 border-cgray h-[10%] shadow text-cwhite">
+    <footer class="fixed bottom-0 bg-cgray/25 left-0 right-0 border-t border-corange/20 h-[10%] shadow text-cwhite">
       <ul class="flex flex-row justify-center mt-2 gap-x-4">
         <li class="">
           <a rel="noopener nofollow" target="_blank" href="https://github.com/kkalb">
@@ -783,7 +728,7 @@ defmodule KkalbWeb.CoreComponents do
       </ul>
 
       <p class="flex justify-center">
-        ©2023 Kevin Kalb, All rights reserved.
+        ©Kevin Kalb, All rights reserved. Version <%= Application.spec(:kkalb)[:vsn] %>
       </p>
     </footer>
     """

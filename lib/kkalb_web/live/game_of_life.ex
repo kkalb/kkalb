@@ -171,9 +171,9 @@ defmodule KkalbWeb.GameOfLife do
   def render(assigns) do
     ~H"""
     <div class="h-[100%]">
-      <h1 class="flex justify-center text-[80px]/[100px] text-cwhite h-[10%]">
-        Game of Life
-      </h1>
+      <.header text="Game of Life">
+        Conway's Game of Life is one of the most fascinating things to watch on an computer.
+      </.header>
 
       <div class="flex flex-col justify-center items-center w-full h-[80%]">
         <.buttons timer_ref={@timer_ref} />
@@ -198,13 +198,13 @@ defmodule KkalbWeb.GameOfLife do
         <.button phx-click="spawn" class="">
           Spawn cells
         </.button>
-        <.button phx-click="spawn" phx-value-type="glider" class="">
+        <.button phx-click="spawn" phx-value-type="glider">
           Spawn glider
         </.button>
-        <.button phx-click="start_timer" class="" disabled={not is_nil(@timer_ref)}>
+        <.button phx-click="start_timer" disabled={not is_nil(@timer_ref)}>
           Start/Continue
         </.button>
-        <.button phx-click="stop_timer" class="" disabled={is_nil(@timer_ref)}>
+        <.button phx-click="stop_timer" disabled={is_nil(@timer_ref)}>
           Pause
         </.button>
       </div>
@@ -241,19 +241,19 @@ defmodule KkalbWeb.GameOfLife do
   end
 
   # using 'display: grid' limits us on how to calculate how many grid cells we want to use
-  defp real_grid(assigns) do
-    assigns = assign(assigns, cells: cells_to_grid(assigns.cells))
+  # defp real_grid(assigns) do
+  #   assigns = assign(assigns, cells: cells_to_grid(assigns.cells))
 
-    ~H"""
-    <grid class="grid grid-rows-40 grid-cols-40 h-full">
-      <%= for {x_idx, row_data} <- @cells, {y_idx, cell} <- row_data do %>
-        <div class="row-span-1 col-span-1 border w-4 h-4" id={"cell-#{x_idx}-#{y_idx}"}>
-          <.cell cell={cell} />
-        </div>
-      <% end %>
-    </grid>
-    """
-  end
+  #   ~H"""
+  #   <grid class="grid grid-rows-40 grid-cols-40 h-full">
+  #     <%= for {x_idx, row_data} <- @cells, {y_idx, cell} <- row_data do %>
+  #       <div class="row-span-1 col-span-1 border w-4 h-4" id={"cell-#{x_idx}-#{y_idx}"}>
+  #         <.cell cell={cell} />
+  #       </div>
+  #     <% end %>
+  #   </grid>
+  #   """
+  # end
 
   defp cell(%{cell: :dead} = assigns) do
     ~H"""
