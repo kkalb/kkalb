@@ -33,9 +33,7 @@ if config_env() == :prod do
       You can generate one by calling: mix phx.gen.secret
       """
 
-  # kkalb-production-1138066045.eu-central-1.elb.amazonaws.com
-
-  host_uri = System.get_env("PHX_HOST") || "http://example.com"
+  host_uri = System.get_env("PHX_HOST") || "http://kkalb_example.com"
   uri = URI.parse(host_uri)
 
   port = String.to_integer(System.get_env("PORT") || "4000")

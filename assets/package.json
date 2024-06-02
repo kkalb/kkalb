@@ -1,4 +1,7 @@
 {
+    "scripts": {
+        "deploy": "cd .. && mix assets.deploy && rm -f _build/esbuild"
+    },
     "dependencies": {
         "chart.js": "^4.4.0",
         "particles.js": "^2.0.0"
