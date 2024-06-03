@@ -12,7 +12,8 @@
 				"jakebecker.elixir-ls",
 				"ms-azuretools.vscode-docker",
 				"bradlc.vscode-tailwindcss",
-				"dbaeumer.vscode-eslint"
+				"dbaeumer.vscode-eslint",
+				"cweijan.vscode-postgresql-client2"
 			]
 		}
 	},
