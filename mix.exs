@@ -47,7 +47,8 @@ defmodule Kkalb.MixProject do
       {:httpoison, "~> 2.0"},
       {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
       {:ecto_sql, "~> 3.0"},
-      {:postgrex, ">= 0.0.0"}
+      {:postgrex, ">= 0.0.0"},
+      {:oban, "~> 2.17"}
     ]
   end
 

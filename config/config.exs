@@ -12,7 +12,8 @@ config :kkalb, Kkalb.Repo,
   database: "kkalb_repo",
   username: "postgres",
   password: "postgres",
-  hostname: "localhost"
+  hostname: "localhost",
+  log: false
 
 config :kkalb, ecto_repos: [Kkalb.Repo]
 
@@ -55,6 +56,14 @@ config :logger, :console,
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
+
+config :kkalb, Oban,
+  engine: Oban.Engines.Basic,
+  queues: [github_fetcher_queue: 10],
+  repo: Kkalb.Repo,
+  plugins: [
+    {Oban.Plugins.Pruner, max_age: 60 * 60 * 24 * 7}
+  ]
 
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.

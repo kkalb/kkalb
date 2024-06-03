@@ -3,8 +3,6 @@ defmodule Mix.Tasks.InsertIssues do
   @shortdoc "Inserts issues from API into the repo"
 
   use Mix.Task
-  # alias KkalbWeb.Live.GithubIssueVis.Transformer
-  # alias KkalbWeb.Live.GithubIssueVis.ChartData
   alias Kkalb.Issues
 
   # 100 is max for the api
@@ -15,16 +13,23 @@ defmodule Mix.Tasks.InsertIssues do
     Application.ensure_all_started(:httpoison)
     Application.ensure_all_started(:kkalb)
 
-    @elements_to_query
-    |> request_github()
+    run_task(@elements_to_query, Date.new!(2012, 1, 1))
+  end
+
+  @spec run_task(any(), %Date{}) :: :ok
+  def run_task(elements_to_query, date) do
+    elements_to_query
+    |> request_github(date)
     |> Map.get(:body)
     |> Jason.decode!()
     |> insert()
   end
 
-  defp request_github(elements_to_query) do
+  defp request_github(elements_to_query, date) do
+    date = Date.to_string(date)
+
     HTTPoison.get!(
-      "https://api.github.com/search/issues?per_page=#{elements_to_query}&q=repo:elixir-lang/elixir+type:issue+closed:<2011-01-01"
+      "https://api.github.com/search/issues?per_page=#{elements_to_query}&q=repo:elixir-lang/elixir+type:issue+closed:<#{date}"
     )
   end
 

@@ -7,6 +7,8 @@ defmodule Kkalb.Application do
 
   @impl true
   def start(_type, _args) do
+    Oban.Telemetry.attach_default_logger()
+
     children = [
       # Start the PubSub system
       {Phoenix.PubSub, name: Kkalb.PubSub},
@@ -14,7 +16,8 @@ defmodule Kkalb.Application do
       {Finch, name: Kkalb.Finch},
       # Start the Endpoint (http/https)
       KkalbWeb.Endpoint,
-      Kkalb.Repo
+      Kkalb.Repo,
+      {Oban, Application.fetch_env!(:kkalb, Oban)}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html
