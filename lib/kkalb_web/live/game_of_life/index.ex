@@ -1,4 +1,4 @@
-defmodule KkalbWeb.GameOfLife do
+defmodule KkalbWeb.Live.GameOfLife.Index do
   @moduledoc """
   A simple game of life implementation to show on a webpage.
   """

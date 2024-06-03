@@ -18,7 +18,7 @@ defmodule KkalbWeb.Router do
     pipe_through :browser
     get("/", PageController, :home)
 
-    live("/live", Live.Index)
-    live("/gameoflife", GameOfLife)
+    live("/live", Live.GithubIssueVis.Index)
+    live("/gameoflife", Live.GameOfLife.Index)
   end
 end
