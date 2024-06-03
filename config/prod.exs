@@ -20,7 +20,7 @@ config :logger, level: :info
 
 config :kkalb, Kkalb.Repo,
   adapter: Ecto.Adapters.Postgres,
-  url: {:system, "DATABASE_URL"},
+  url: System.get_env("DATABASE_URL"),
   database: "",
   ssl: true,
   pool_size: 2
