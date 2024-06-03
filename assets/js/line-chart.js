@@ -41,10 +41,10 @@ class LineChart {
       options: {
         animations: {
           tension: {
-            duration: 800,
-            easing: 'easeInSine',
-            from: 0.1,
-            to: 0.7,
+            duration: 1000,
+            easing: 'easeInQuad',
+            from: 0,
+            to: 0.1,
             loop: true
           }
         },
@@ -53,8 +53,9 @@ class LineChart {
         maintainAspectRatio: false,
         plugins: {
           title: {
-            display: true,
+            display: false,
             text: title,
+            color: cwhite
           },
           legend: {
             display: true,
@@ -67,6 +68,13 @@ class LineChart {
             }
           },
         },
+        scales: {
+          y: {
+            ticks: {
+              precision: 0,
+            }
+          }
+        }
       },
     });
   }

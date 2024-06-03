@@ -29,7 +29,6 @@ defmodule KkalbWeb.Live.TransformerTest do
                       "closed_at" => _closed_at,
                       "created_at" => created_at
                     } ->
-      # IO.inspect(closed_at)
       assert {:ok, _date, 0} = DateTime.from_iso8601(created_at)
     end)
   end

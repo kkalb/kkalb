@@ -5,6 +5,14 @@ defmodule KkalbWeb.Live.Chart.Line.Component do
   use Phoenix.Component
 
   def render(assigns) do
+    assigns =
+      assign(assigns,
+        chart_values: assigns.chart_data.chart_values,
+        chart_labels: assigns.chart_data.chart_labels,
+        chart_headings: assigns.chart_data.chart_headings,
+        chart_title: assigns.chart_data.chart_title
+      )
+
     ~H"""
     <canvas
       class="bg-cgray rounded"
