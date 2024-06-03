@@ -13,9 +13,8 @@ defmodule Kkalb.Application do
       # Start Finch
       {Finch, name: Kkalb.Finch},
       # Start the Endpoint (http/https)
-      KkalbWeb.Endpoint
-      # Start a worker by calling: Kkalb.Worker.start_link(arg)
-      # {Kkalb.Worker, arg}
+      KkalbWeb.Endpoint,
+      Kkalb.Repo
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

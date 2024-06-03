@@ -7,6 +7,15 @@
 # General application configuration
 import Config
 
+# default config for repo, will be overridden in other config files
+config :kkalb, Kkalb.Repo,
+  database: "kkalb_repo",
+  username: "postgres",
+  password: "postgres",
+  hostname: "localhost"
+
+config :kkalb, ecto_repos: [Kkalb.Repo]
+
 # Configures the endpoint
 config :kkalb, KkalbWeb.Endpoint,
   url: [host: "localhost"],
