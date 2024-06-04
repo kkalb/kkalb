@@ -54,12 +54,13 @@ defmodule Kkalb.MixProject do
   end
 
   defp preferred_cli_env() do
-    ["ecto.reset": :test]
+    [reset: :test]
   end
 
   # do not apply seeds on dev right now
   defp db_reset(:test), do: db_reset(:dev) ++ ["run priv/repo/seeds.exs"]
   defp db_reset(:dev), do: ["ecto.drop", "ecto.create", "ecto.migrate"]
+  defp db_reset(_), do: []
 
   # Aliases are shortcuts or tasks specific to the current project.
   # For example, to install project dependencies and perform other setup tasks, run:
