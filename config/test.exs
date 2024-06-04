@@ -14,3 +14,10 @@ config :logger, level: :warning
 config :phoenix, :plug_init_mode, :runtime
 
 config :kkalb, Oban, testing: :inline
+
+config :kkalb, Kkalb.Repo,
+  username: "postgres",
+  password: "postgres",
+  database: "kkalb_repo_test",
+  hostname: "localhost",
+  pool: Ecto.Adapters.SQL.Sandbox
