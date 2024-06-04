@@ -16,14 +16,33 @@ defmodule Kkalb.Issues do
       [%Issue{}, ...]
 
   """
-  def list_issues(_from_date \\ ~U[2024-01-01 00:00:00Z]) do
+  @spec list_issues :: [%Issue{}]
+  def list_issues() do
     query =
       from(i in Issue,
         order_by: [desc: i.gh_created_at]
-        # where: i.gh_created_at >= ^from_date
       )
 
     Repo.all(query)
+  end
+
+  @doc """
+  Returns the amount of issues that are not closed.
+
+  ## Examples
+
+      iex> count_open_issues()
+      [%Issue{}, ...]
+
+  """
+  @spec count_open_issues :: non_neg_integer()
+  def count_open_issues() do
+    query =
+      from(i in Issue,
+        where: is_nil(i.gh_closed_at)
+      )
+
+    Repo.aggregate(query, :count)
   end
 
   @doc """

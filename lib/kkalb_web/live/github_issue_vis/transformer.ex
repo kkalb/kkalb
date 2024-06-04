@@ -1,8 +1,8 @@
 defmodule KkalbWeb.Live.GithubIssueVis.Transformer do
   alias KkalbWeb.Live.GithubIssueVis.ChartData
-  alias Kkalb.Issues.Issue
+  alias Kkalb.Issues
 
-  @spec transform([%Issue{}]) :: %ChartData{}
+  @spec transform([%Issues.Issue{}]) :: %ChartData{}
   def transform(issues, elements_to_show \\ 20)
 
   def transform([], _elements_to_show) do
@@ -15,7 +15,7 @@ defmodule KkalbWeb.Live.GithubIssueVis.Transformer do
   end
 
   def transform(issues, elements_to_show) do
-    amount_issues = Enum.count(issues, fn item -> is_nil(item.gh_closed_at) end)
+    amount_issues = Issues.count_open_issues()
     earliest_date = Enum.min_by(issues, fn item -> item.gh_created_at end, DateTime).gh_created_at
     latest_date = Enum.max_by(issues, fn item -> item.gh_created_at end, DateTime).gh_created_at
 
