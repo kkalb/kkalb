@@ -16,8 +16,8 @@ defmodule Kkalb.Application do
       {Finch, name: Kkalb.Finch},
       # Start the Endpoint (http/https)
       KkalbWeb.Endpoint,
-      Kkalb.Repo
-      # {Oban, Application.fetch_env!(:kkalb, Oban)}
+      Kkalb.Repo,
+      {Oban, Application.fetch_env!(:kkalb, Oban)}
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

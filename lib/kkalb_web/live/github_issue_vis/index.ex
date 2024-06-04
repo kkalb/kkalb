@@ -1,6 +1,6 @@
 defmodule KkalbWeb.Live.GithubIssueVis.Index do
   @moduledoc """
-  Callbacks for handling data for /live path
+  Callbacks github graph visualization
   """
   require Logger
   use KkalbWeb, :live_view
@@ -14,43 +14,28 @@ defmodule KkalbWeb.Live.GithubIssueVis.Index do
   def mount(_params, _session, socket) do
     elements_to_query = 20
 
-    if connected?(socket) do
-      send(self(), {:fetch_from_db, elements_to_query})
-    end
+    {chart_data, loading} =
+      if connected?(socket) do
+        issues = Issues.list_issues()
+        # takes 3 s with all issues, will be refactored soon
+        chart_data = Transformer.transform(issues)
+
+        {chart_data, false}
+      else
+        {%ChartData{}, true}
+      end
 
     {:ok,
      socket
-     |> assign(chart_data: %ChartData{})
-     |> assign(elements_to_query: elements_to_query)}
-  end
-
-  @impl true
-  def handle_info({:fetch_from_db, _elements}, socket) do
-    view = self()
-
-    Task.start(fn ->
-      issues = Issues.list_issues()
-      send(view, {:fetch_from_db_complete, issues})
-    end)
-
-    {:noreply, socket}
-  end
-
-  @impl true
-  def handle_info({:fetch_from_db_complete, issues}, socket) do
-    chart_data = Transformer.transform(issues)
-
-    {:noreply,
-     socket
      |> assign(chart_data: chart_data)
-     |> assign(loading: false)}
+     |> assign(loading: loading)
+     |> assign(elements_to_query: elements_to_query)}
   end
 
   @impl true
   def handle_event("change_elements_to_query", %{"count" => elements}, socket) do
     issues = Issues.list_issues()
     chart_data = Transformer.transform(issues, String.to_integer(elements))
-    IO.inspect(elements)
 
     {:noreply,
      socket
