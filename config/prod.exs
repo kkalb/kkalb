@@ -17,10 +17,3 @@ config :logger, level: :info
 
 # Runtime production configuration, including reading
 # of environment variables, is done on config/runtime.exs.
-
-config :kkalb, Kkalb.Repo,
-  adapter: Ecto.Adapters.Postgres,
-  url: System.get_env("DATABASE_URL"),
-  database: "",
-  ssl: true,
-  pool_size: 2

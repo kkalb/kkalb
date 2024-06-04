@@ -44,4 +44,11 @@ if config_env() == :prod do
 
   # ## SSL Support
   config :kkalb, KkalbWeb.Endpoint, force_ssl: [hsts: true]
+
+  config :kkalb, Kkalb.Repo,
+    adapter: Ecto.Adapters.Postgres,
+    url: System.get_env("DATABASE_URL"),
+    database: "",
+    ssl: true,
+    pool_size: System.get_env("POOL_SIZE", "9") |> String.to_integer()
 end

@@ -14,7 +14,7 @@ config :kkalb, Kkalb.Repo,
   password: "postgres",
   hostname: "localhost",
   log: false,
-  pool_size: System.get_env("POOL_SIZE", "10") |> String.to_integer()
+  pool_size: 9
 
 config :kkalb, ecto_repos: [Kkalb.Repo]
 
