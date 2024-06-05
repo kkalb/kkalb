@@ -2,8 +2,8 @@ defmodule KkalbWeb.Live.GithubIssueVis.Transformer do
   @moduledoc """
   Converts `Issue` structs to chart data.
   """
-  alias KkalbWeb.Live.GithubIssueVis.ChartData
   alias Kkalb.Issues
+  alias KkalbWeb.Live.GithubIssueVis.ChartData
 
   @spec convert([Issues.Issue.t()], NaiveDateTime.t()) :: ChartData.t() | any()
   def convert(issues, nv_start_date) do
@@ -47,11 +47,11 @@ defmodule KkalbWeb.Live.GithubIssueVis.Transformer do
           acc
 
         {false, false} ->
-          acc |> Map.update(created_at, 1, &(&1 + 1))
+          Map.update(acc, created_at, 1, &(&1 + 1))
 
         {true, true} ->
           closed_at = DateTime.to_date(issue.gh_closed_at)
-          acc |> Map.update(closed_at, -1, &(&1 - 1))
+          Map.update(acc, closed_at, -1, &(&1 - 1))
 
         {true, false} ->
           closed_at = DateTime.to_date(issue.gh_closed_at)

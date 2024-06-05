@@ -9,6 +9,7 @@ defmodule Kkalb.Workers.GithubFetcherWorker do
   use Oban.Worker, queue: :github_fetcher_queue, max_attempts: 10
 
   alias Mix.Tasks.InsertIssues
+
   require Logger
 
   @first_issue_date Date.new!(2011, 2, 1)

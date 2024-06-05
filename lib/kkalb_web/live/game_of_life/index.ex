@@ -34,7 +34,7 @@ defmodule KkalbWeb.Live.GameOfLife.Index do
       |> revive(5, 3)
       |> revive(5, 2)
 
-    {:noreply, socket |> assign(cells: glider_cells)}
+    {:noreply, assign(socket, cells: glider_cells)}
   end
 
   @impl Phoenix.LiveView
@@ -47,39 +47,31 @@ defmodule KkalbWeb.Live.GameOfLife.Index do
         revive(cells, Enum.random(default_range), Enum.random(default_range))
       end)
 
-    {:noreply, socket |> assign(cells: new_cells)}
+    {:noreply, assign(socket, cells: new_cells)}
   end
 
   def handle_event("start_timer", _, socket) do
     timer_ref = start_timer(socket.assigns.timer_speed)
-    {:noreply, socket |> assign(timer_ref: timer_ref)}
+    {:noreply, assign(socket, timer_ref: timer_ref)}
   end
 
   def handle_event("stop_timer", _, socket) do
     nil = stop_timer(socket.assigns.timer_ref)
-    {:noreply, socket |> assign(timer_ref: nil)}
+    {:noreply, assign(socket, timer_ref: nil)}
   end
 
   @doc """
   When timer is not running, we only change the speed.
   When timer is running, we stop it, change speed, and start again.
   """
-  def handle_event(
-        "change_speed",
-        %{"speed" => timer_speed},
-        %{assigns: %{timer_ref: nil}} = socket
-      ) do
-    {:noreply, socket |> assign(timer_speed: timer_speed)}
+  def handle_event("change_speed", %{"speed" => timer_speed}, %{assigns: %{timer_ref: nil}} = socket) do
+    {:noreply, assign(socket, timer_speed: timer_speed)}
   end
 
-  def handle_event(
-        "change_speed",
-        %{"speed" => timer_speed},
-        %{assigns: %{timer_ref: timer_ref}} = socket
-      ) do
+  def handle_event("change_speed", %{"speed" => timer_speed}, %{assigns: %{timer_ref: timer_ref}} = socket) do
     nil = stop_timer(timer_ref)
     timer_ref = start_timer(timer_speed)
-    {:noreply, socket |> assign(timer_ref: timer_ref, timer_speed: timer_speed)}
+    {:noreply, assign(socket, timer_ref: timer_ref, timer_speed: timer_speed)}
   end
 
   # `min` is 100 ms and `max` is 1000 ms.
@@ -112,8 +104,8 @@ defmodule KkalbWeb.Live.GameOfLife.Index do
   end
 
   defp do_game_cycle(%{assigns: %{cells: cells, size: size}} = socket) do
-    new_cells = cells |> may_revive(size)
-    socket |> assign(cells: new_cells)
+    new_cells = may_revive(cells, size)
+    assign(socket, cells: new_cells)
   end
 
   defp may_revive(cells, size) do
@@ -155,7 +147,7 @@ defmodule KkalbWeb.Live.GameOfLife.Index do
         get_in(cells, [new_row, new_col])
       end
 
-    neighbours = Enum.filter(two_d_metrics, fn m -> m == :alive end) |> length()
+    neighbours = two_d_metrics |> Enum.filter(fn m -> m == :alive end) |> length()
     new_val = check_cell(neighbours, cell)
 
     new_val
@@ -213,7 +205,8 @@ defmodule KkalbWeb.Live.GameOfLife.Index do
   end
 
   defp cells_to_grid(cells) do
-    Enum.map(cells, fn {x, row} ->
+    cells
+    |> Enum.map(fn {x, row} ->
       {x, Enum.sort_by(row, fn {y, _cell} -> y end, :asc)}
     end)
     |> Enum.sort_by(fn {x, _row} -> x end, :asc)

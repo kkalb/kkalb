@@ -54,11 +54,12 @@ defmodule Kkalb.MixProject do
       {:ecto_sql, "~> 3.0"},
       {:typed_ecto_schema, "~> 0.4.1", runtime: false},
       {:postgrex, ">= 0.0.0"},
-      {:oban, "~> 2.17"}
+      {:oban, "~> 2.17"},
+      {:styler, "~> 1.0.0-rc.0", only: [:dev, :test], runtime: false}
     ]
   end
 
-  defp preferred_cli_env() do
+  defp preferred_cli_env do
     ["ecto.reset": :test]
   end
 

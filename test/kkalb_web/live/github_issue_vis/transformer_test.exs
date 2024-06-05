@@ -6,7 +6,7 @@ defmodule KkalbWeb.Live.TransformerTest do
 
   test "transformer transforms properly" do
     nv_start_time = ~N[2024-05-01 00:00:00.000000]
-    chart_data = Issues.list_issues(nv_start_time) |> Transformer.convert(nv_start_time)
+    chart_data = nv_start_time |> Issues.list_issues() |> Transformer.convert(nv_start_time)
 
     expected_labels = [
       ~D[2024-05-01],

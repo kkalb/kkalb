@@ -17,31 +17,32 @@ defmodule KkalbWeb.ConnCase do
 
   use ExUnit.CaseTemplate
 
+  alias Ecto.Adapters.SQL.Sandbox
+
   using do
     quote do
+      use KkalbWeb, :verified_routes
+
+      import KkalbWeb.ConnCase
+      import Phoenix.ConnTest
+      import Phoenix.LiveViewTest
+      import Plug.Conn
       # The default endpoint for testing
       @endpoint KkalbWeb.Endpoint
 
-      use KkalbWeb, :verified_routes
-
       # Import conveniences for testing with connections
-      import Plug.Conn
-      import Phoenix.ConnTest
-      import KkalbWeb.ConnCase
-      import Phoenix.LiveViewTest
     end
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Kkalb.Repo)
+    :ok = Sandbox.checkout(Kkalb.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Kkalb.Repo, {:shared, self()})
+      Sandbox.mode(Kkalb.Repo, {:shared, self()})
     end
 
     conn =
-      Phoenix.ConnTest.build_conn()
-      |> Phoenix.ConnTest.init_test_session(%{})
+      Phoenix.ConnTest.init_test_session(Phoenix.ConnTest.build_conn(), %{})
 
     {:ok, conn: conn}
   end

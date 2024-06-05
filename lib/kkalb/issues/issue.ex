@@ -4,6 +4,7 @@ defmodule Kkalb.Issues.Issue do
   Typically an issue comes from the GitHub-Api.
   """
   use TypedEctoSchema
+
   import Ecto.Changeset
 
   @primary_key false

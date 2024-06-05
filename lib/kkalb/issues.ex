@@ -3,8 +3,9 @@ defmodule Kkalb.Issues do
   Context module for issues.
   """
 
-  alias Kkalb.Issues.Issue
   import Ecto.Query
+
+  alias Kkalb.Issues.Issue
   alias Kkalb.Repo
 
   @doc """
@@ -28,7 +29,7 @@ defmodule Kkalb.Issues do
   end
 
   @spec list_issues() :: [Issue.t()]
-  def list_issues() do
+  def list_issues do
     query =
       from(i in Issue,
         order_by: [desc: i.gh_created_at]
@@ -58,7 +59,7 @@ defmodule Kkalb.Issues do
   end
 
   @spec count_open_issues() :: non_neg_integer()
-  def count_open_issues() do
+  def count_open_issues do
     query = from(i in Issue, where: is_nil(i.gh_closed_at))
 
     Repo.aggregate(query, :count)
@@ -77,9 +78,9 @@ defmodule Kkalb.Issues do
 
   """
   def upsert_issue(attrs) do
-    gh_created_at = attrs.gh_created_at && DateTime.from_iso8601(attrs.gh_created_at) |> elem(1)
-    gh_updated_at = attrs.gh_updated_at && DateTime.from_iso8601(attrs.gh_updated_at) |> elem(1)
-    gh_closed_at = attrs.gh_closed_at && DateTime.from_iso8601(attrs.gh_closed_at) |> elem(1)
+    gh_created_at = attrs.gh_created_at && attrs.gh_created_at |> DateTime.from_iso8601() |> elem(1)
+    gh_updated_at = attrs.gh_updated_at && attrs.gh_updated_at |> DateTime.from_iso8601() |> elem(1)
+    gh_closed_at = attrs.gh_closed_at && attrs.gh_closed_at |> DateTime.from_iso8601() |> elem(1)
 
     issue = %Issue{
       id: attrs.id,

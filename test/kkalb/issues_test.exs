@@ -1,5 +1,6 @@
 defmodule Kkalb.Issues.IssuesTest do
   use Kkalb.RepoCase, async: true
+
   alias Kkalb.Issues
 
   test "seeded list_issues/1 returns 2 issues" do
@@ -7,12 +8,12 @@ defmodule Kkalb.Issues.IssuesTest do
     start_date = DateTime.from_naive!(nv_start_date, "Etc/UTC")
 
     [issue_1, issue_2, issue_3, issue_4] = Issues.list_issues(nv_start_date)
-    assert Date.compare(issue_1.gh_created_at, start_date) == :gt
-    assert Date.compare(issue_2.gh_created_at, start_date) == :gt
-    assert Date.compare(issue_3.gh_created_at, start_date) == :lt
-    assert Date.compare(issue_3.gh_closed_at, start_date) == :gt
-    assert Date.compare(issue_4.gh_created_at, start_date) == :lt
-    assert Date.compare(issue_4.gh_closed_at, start_date) == :gt
+    assert Date.after?(issue_1.gh_created_at, start_date)
+    assert Date.after?(issue_2.gh_created_at, start_date)
+    assert Date.before?(issue_3.gh_created_at, start_date)
+    assert Date.after?(issue_3.gh_closed_at, start_date)
+    assert Date.before?(issue_4.gh_created_at, start_date)
+    assert Date.after?(issue_4.gh_closed_at, start_date)
   end
 
   test "count_open_issues_before/1 returns 2" do
@@ -21,7 +22,7 @@ defmodule Kkalb.Issues.IssuesTest do
   end
 
   test "upsert_issue/1" do
-    datetime = DateTime.now!("Etc/UTC") |> DateTime.truncate(:second)
+    datetime = "Etc/UTC" |> DateTime.now!() |> DateTime.truncate(:second)
 
     attrs = %{
       id: 1000,

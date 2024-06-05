@@ -2,13 +2,14 @@ defmodule KkalbWeb.Live.GithubIssueVis.Index do
   @moduledoc """
   Callbacks github graph visualization
   """
-  require Logger
   use KkalbWeb, :live_view
 
+  alias Kkalb.Issues
   alias KkalbWeb.Live.Chart
   alias KkalbWeb.Live.GithubIssueVis.ChartData
   alias KkalbWeb.Live.GithubIssueVis.Transformer
-  alias Kkalb.Issues
+
+  require Logger
 
   @impl true
   def mount(_params, _session, socket) do
@@ -40,8 +41,6 @@ defmodule KkalbWeb.Live.GithubIssueVis.Index do
     issues = Issues.list_issues(socket.assigns.start_date)
     chart_data = Transformer.convert(issues, socket.assigns.start_date)
 
-    {:noreply,
-     socket
-     |> assign(chart_data: chart_data)}
+    {:noreply, assign(socket, chart_data: chart_data)}
   end
 end

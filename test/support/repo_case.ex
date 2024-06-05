@@ -2,21 +2,23 @@ defmodule Kkalb.RepoCase do
   @moduledoc false
   use ExUnit.CaseTemplate
 
+  alias Ecto.Adapters.SQL.Sandbox
+
   using do
     quote do
-      alias Kkalb.Repo
-
       import Ecto
       import Ecto.Query
       import Kkalb.RepoCase
+
+      alias Kkalb.Repo
     end
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Kkalb.Repo)
+    :ok = Sandbox.checkout(Kkalb.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Kkalb.Repo, {:shared, self()})
+      Sandbox.mode(Kkalb.Repo, {:shared, self()})
     end
 
     :ok

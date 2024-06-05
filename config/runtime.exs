@@ -36,6 +36,13 @@ if config_env() == :prod do
 
   port = String.to_integer(System.get_env("PORT") || "4000")
 
+  config :kkalb, Kkalb.Repo,
+    adapter: Ecto.Adapters.Postgres,
+    url: System.get_env("DATABASE_URL"),
+    pool_size: "POOL_SIZE" |> System.get_env("9") |> String.to_integer()
+
+  config :kkalb, KkalbWeb.Endpoint, force_ssl: [hsts: true]
+
   config :kkalb, KkalbWeb.Endpoint,
     url: [host: uri.host, port: uri.port || 443, scheme: "https"],
     http: [
@@ -45,10 +52,4 @@ if config_env() == :prod do
     secret_key_base: secret_key_base
 
   # ## SSL Support
-  config :kkalb, KkalbWeb.Endpoint, force_ssl: [hsts: true]
-
-  config :kkalb, Kkalb.Repo,
-    adapter: Ecto.Adapters.Postgres,
-    url: System.get_env("DATABASE_URL"),
-    pool_size: System.get_env("POOL_SIZE", "9") |> String.to_integer()
 end

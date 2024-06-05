@@ -1,10 +1,11 @@
 defmodule Mix.Tasks.InsertIssues do
-  @moduledoc "Inserts issues from GitHub-API into the repo with `mix insert_issues`"
   @shortdoc "Inserts issues from API into the repo"
 
+  @moduledoc "Inserts issues from GitHub-API into the repo with `mix insert_issues`"
   use Mix.Task
 
   alias Kkalb.Issues
+
   require Logger
   # 100 is max for the api
   @elements_to_query 100

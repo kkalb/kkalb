@@ -1,4 +1,5 @@
 defmodule Kkalb.Repo.Migrations.CreateIssues do
+  @moduledoc false
   use Ecto.Migration
 
   def up do
