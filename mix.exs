@@ -10,7 +10,11 @@ defmodule Kkalb.MixProject do
       start_permanent: Mix.env() == :prod,
       aliases: aliases(),
       deps: deps(),
-      preferred_cli_env: preferred_cli_env()
+      preferred_cli_env: preferred_cli_env(),
+      dialyzer: [
+        plt_add_apps: [:mix, :ecto],
+        flags: [:unmatched_returns, :error_handling, :underspecs, :no_opaque]
+      ]
     ]
   end
 
@@ -48,6 +52,7 @@ defmodule Kkalb.MixProject do
       {:httpoison, "~> 2.0"},
       {:dialyxir, "~> 1.4", only: [:dev, :test], runtime: false},
       {:ecto_sql, "~> 3.0"},
+      {:typed_ecto_schema, "~> 0.4.1", runtime: false},
       {:postgrex, ">= 0.0.0"},
       {:oban, "~> 2.17"}
     ]

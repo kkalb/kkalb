@@ -2,8 +2,7 @@ defmodule KkalbWeb.GithubIssueVis.IndexTest do
   use KkalbWeb.ConnCase, async: false
 
   test "renders canvas", %{conn: conn} do
-    {:ok, view, html} = live(conn, "/live")
-    IO.inspect(html)
+    {:ok, _view, _html} = live(conn, "/live")
     # open_browser(view)
   end
 end

@@ -17,9 +17,10 @@ defmodule KkalbWeb.Live.GithubIssueVis.Index do
 
     {chart_data, loading} =
       if connected?(socket) do
-        issues = Issues.list_issues(start_date)
-        # takes 3 s with all issues, will be refactored soon
-        chart_data = Transformer.convert(issues, start_date)
+        chart_data =
+          start_date
+          |> Issues.list_issues()
+          |> Transformer.convert(start_date)
 
         {chart_data, false}
       else

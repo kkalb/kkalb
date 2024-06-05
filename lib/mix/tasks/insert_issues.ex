@@ -12,13 +12,13 @@ defmodule Mix.Tasks.InsertIssues do
   # run this task locally to get all issues into the db
   @impl Mix.Task
   def run(_args) do
-    Application.ensure_all_started(:httpoison)
-    Application.ensure_all_started(:kkalb)
+    _ = Application.ensure_all_started(:httpoison)
+    _ = Application.ensure_all_started(:kkalb)
 
     run_task(@elements_to_query, Date.new!(2011, 2, 1))
   end
 
-  @spec run_task(any(), %Date{}) :: {binary(), binary()}
+  @spec run_task(any(), Date.t()) :: {binary(), binary()}
   def run_task(elements_to_query, date) do
     response = request_github(elements_to_query, date)
 
@@ -43,6 +43,7 @@ defmodule Mix.Tasks.InsertIssues do
     endpoint =
       "https://api.github.com/search/issues?per_page=#{elements_to_query}&q=repo:elixir-lang/elixir+type:issue+created:<#{date}"
 
+    # read from config rather than from system each time
     [api_key: api_key] = Application.fetch_env!(:kkalb, :github)
 
     headers = [
@@ -72,7 +73,5 @@ defmodule Mix.Tasks.InsertIssues do
     end)
   end
 
-  defp insert(%{"message" => message}) do
-    Logger.error(message)
-  end
+  defp insert(%{"message" => message}), do: Logger.error(message)
 end

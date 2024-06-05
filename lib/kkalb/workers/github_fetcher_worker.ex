@@ -10,10 +10,11 @@ defmodule Kkalb.Workers.GithubFetcherWorker do
 
   alias Mix.Tasks.InsertIssues
   require Logger
-  # @rate_limit 30
 
   @first_issue_date Date.new!(2011, 2, 1)
-  @impl true
+
+  @impl Oban.Worker
+  @spec perform(any()) :: :ok
   def perform(%{args: %{"backfill_date" => backfill_date}}) do
     date = Date.from_iso8601!(backfill_date)
 
@@ -23,37 +24,40 @@ defmodule Kkalb.Workers.GithubFetcherWorker do
 
     wait_time = speed_throttle(rate_limit_reset, rate_limit_remaining)
 
-    cond do
-      Date.before?(date, @first_issue_date) ->
-        Logger.info("Stop rescheduling since date reached #{backfill_date}")
+    _ =
+      cond do
+        Date.before?(date, @first_issue_date) ->
+          Logger.info("Stop rescheduling since date reached #{backfill_date}")
 
-      # when we reached the rate limit, we reschedule the same date
-      rate_limit_remaining <= 1 ->
-        %{"backfill_date" => date}
-        |> new(schedule_in: wait_time)
-        |> Oban.insert!()
+        # when we reached the rate limit, we reschedule the same date
+        rate_limit_remaining <= 1 ->
+          %{"backfill_date" => date}
+          |> new(schedule_in: wait_time)
+          |> Oban.insert!()
 
-      # as long as the backfill date is later than the stop date, we continue rescheduling
-      true ->
-        %{"backfill_date" => Date.add(date, -10)}
-        |> new(schedule_in: wait_time)
-        |> Oban.insert!()
-    end
+        # as long as the backfill date is later than the stop date, we continue rescheduling
+        true ->
+          %{"backfill_date" => Date.add(date, -10)}
+          |> new(schedule_in: wait_time)
+          |> Oban.insert!()
+      end
 
     :ok
   end
 
   def perform(_) do
-    %{"backfill_date" => Date.utc_today()}
-    |> new(schedule_in: 0)
-    |> Oban.insert!()
+    _job =
+      %{"backfill_date" => Date.utc_today()}
+      |> new(schedule_in: 0)
+      |> Oban.insert!()
 
     :ok
   end
 
   # decelerate when limit gets slower
   # and rate_limit_remaining is between 0 and 30.
-  def speed_throttle(rate_limit_reset, rate_limit_remaining) do
+  @spec speed_throttle(binary(), non_neg_integer()) :: non_neg_integer()
+  defp speed_throttle(rate_limit_reset, rate_limit_remaining) do
     seconds_remaining =
       rate_limit_reset
       |> String.to_integer()

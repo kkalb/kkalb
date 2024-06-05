@@ -8,8 +8,6 @@ range = range |> Enum.to_list() |> Enum.map(&DateTime.new!(&1, Time.new!(0, 0, 0
 
 issues =
   for {datetime, idx} <- Enum.with_index(range, 1) do
-    # datetime = DateTime.new!(date, Time.new!(0, 0, 0))
-
     # issues get closed after 7 days in seeds
     closed_at =
       if Date.diff(end_date, DateTime.to_date(datetime)) > 6 do

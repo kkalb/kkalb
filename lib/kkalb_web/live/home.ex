@@ -1,6 +1,6 @@
 defmodule KkalbWeb.Live.Home do
   @moduledoc """
-
+  Landing page of the webside.
   """
   require Logger
 

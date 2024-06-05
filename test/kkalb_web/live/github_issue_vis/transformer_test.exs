@@ -3,7 +3,6 @@ defmodule KkalbWeb.Live.TransformerTest do
 
   alias Kkalb.Issues
   alias KkalbWeb.Live.GithubIssueVis.Transformer
-  alias KkalbWeb.Live.GithubIssueVis.ChartData
 
   test "transformer transforms properly" do
     nv_start_time = ~N[2024-05-01 00:00:00.000000]

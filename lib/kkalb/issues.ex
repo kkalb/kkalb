@@ -16,7 +16,7 @@ defmodule Kkalb.Issues do
       [%Issues.Issue{}}
 
   """
-  @spec list_issues(NaiveDateTime.t()) :: [%Issue{}]
+  @spec list_issues(NaiveDateTime.t()) :: [Issue.t()]
   def list_issues(start_date) do
     query =
       from(i in Issue,
@@ -27,7 +27,7 @@ defmodule Kkalb.Issues do
     Repo.all(query)
   end
 
-  @spec list_issues() :: [%Issue{}]
+  @spec list_issues() :: [Issue.t()]
   def list_issues() do
     query =
       from(i in Issue,
