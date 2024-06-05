@@ -22,7 +22,7 @@ window.addEventListener("phx:page-loading-start", _info => topbar.show(300))
 window.addEventListener("phx:page-loading-stop", _info => topbar.hide())
 
 particlesJS.load('particles-js', 'assets/particles.json', function () {
-  console.log('callback - particles-js config loaded');
+  // console.log('callback - particles-js config loaded');
 });
 
 // connect if there are any LiveViews on the page

@@ -4,7 +4,7 @@ defmodule Kkalb.MixProject do
   def project do
     [
       app: :kkalb,
-      version: "1.0.10",
+      version: "1.0.11",
       elixir: "~> 1.16",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
@@ -54,13 +54,13 @@ defmodule Kkalb.MixProject do
   end
 
   defp preferred_cli_env() do
-    [reset: :test]
+    ["ecto.reset": :test]
   end
 
   # do not apply seeds on dev right now
-  defp db_reset(:test), do: db_reset(:dev) ++ ["run priv/repo/seeds.exs"]
-  defp db_reset(:dev), do: ["ecto.drop", "ecto.create", "ecto.migrate"]
-  defp db_reset(_), do: []
+  defp ecto_reset(:test), do: ecto_reset(:dev) ++ ["run priv/repo/seeds.exs"]
+  defp ecto_reset(:dev), do: ["ecto.drop", "ecto.create", "ecto.migrate"]
+  defp ecto_reset(_), do: []
 
   # Aliases are shortcuts or tasks specific to the current project.
   # For example, to install project dependencies and perform other setup tasks, run:
@@ -70,7 +70,7 @@ defmodule Kkalb.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      reset: db_reset(Mix.env()),
+      "ecto.reset": ecto_reset(Mix.env()),
       setup: ["deps.get", "assets.setup", "assets.build"],
       "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
       "assets.build": ["tailwind default", "esbuild default"],

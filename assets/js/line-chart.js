@@ -73,7 +73,10 @@ class LineChart {
             ticks: {
               precision: 0,
             }
-          }
+          },
+          // x: {
+          //   type: 'linear'
+          // }
         }
       },
     });

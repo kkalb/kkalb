@@ -28,10 +28,21 @@ defmodule KkalbWeb.ConnCase do
       import Plug.Conn
       import Phoenix.ConnTest
       import KkalbWeb.ConnCase
+      import Phoenix.LiveViewTest
     end
   end
 
-  setup _tags do
-    {:ok, conn: Phoenix.ConnTest.build_conn()}
+  setup tags do
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Kkalb.Repo)
+
+    unless tags[:async] do
+      Ecto.Adapters.SQL.Sandbox.mode(Kkalb.Repo, {:shared, self()})
+    end
+
+    conn =
+      Phoenix.ConnTest.build_conn()
+      |> Phoenix.ConnTest.init_test_session(%{})
+
+    {:ok, conn: conn}
   end
 end

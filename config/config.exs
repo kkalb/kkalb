@@ -66,6 +66,8 @@ config :kkalb, Oban,
     {Oban.Plugins.Pruner, max_age: 60 * 60 * 24 * 7}
   ]
 
+config :kkalb, :github, api_key: ""
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{config_env()}.exs"

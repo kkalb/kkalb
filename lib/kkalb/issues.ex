@@ -12,11 +12,22 @@ defmodule Kkalb.Issues do
 
   ## Examples
 
-      iex> list_issues()
-      [%Issue{}, ...]
+      iex> Issues.list_issues()
+      [%Issues.Issue{}}
 
   """
-  @spec list_issues :: [%Issue{}]
+  @spec list_issues(NaiveDateTime.t()) :: [%Issue{}]
+  def list_issues(start_date) do
+    query =
+      from(i in Issue,
+        order_by: [desc: i.gh_created_at],
+        where: i.gh_created_at >= ^start_date or i.gh_closed_at >= ^start_date
+      )
+
+    Repo.all(query)
+  end
+
+  @spec list_issues() :: [%Issue{}]
   def list_issues() do
     query =
       from(i in Issue,
@@ -27,20 +38,28 @@ defmodule Kkalb.Issues do
   end
 
   @doc """
-  Returns the amount of issues that are not closed.
+  Returns the amount of issues that are not closed before end_date.
 
   ## Examples
 
-      iex> count_open_issues()
-      [%Issue{}, ...]
+      iex> Issues.count_open_issues(~N[2024-06-01 00:00:00])
+      [%Issues.Issue{}]
 
   """
-  @spec count_open_issues :: non_neg_integer()
-  def count_open_issues() do
+  @spec count_open_issues_before(NaiveDateTime.t()) :: non_neg_integer()
+  def count_open_issues_before(end_date) do
     query =
       from(i in Issue,
-        where: is_nil(i.gh_closed_at)
+        where: is_nil(i.gh_closed_at),
+        where: i.gh_created_at < ^end_date
       )
+
+    Repo.aggregate(query, :count)
+  end
+
+  @spec count_open_issues() :: non_neg_integer()
+  def count_open_issues() do
+    query = from(i in Issue, where: is_nil(i.gh_closed_at))
 
     Repo.aggregate(query, :count)
   end
@@ -50,10 +69,10 @@ defmodule Kkalb.Issues do
 
   ## Examples
 
-      iex> upsert_issue(%{id: 2328781667, number: 123, gh_created_at: "2024-06-01T12:00:00Z", gh_updated_at: "2024-06-01T13:00:00Z", gh_closed_at: "2024-06-01T14:00:00Z"})
-      {:ok, %Issue{}}
+      iex> Issues.upsert_issue(%{id: 2328781667, number: 123, gh_created_at: "2024-06-01T12:00:00Z", gh_updated_at: "2024-06-01T13:00:00Z", gh_closed_at: "2024-06-01T14:00:00Z"})
+      {:ok, %Issues.Issue{}}
 
-      iex> upsert_issue(%{field: bad_value})
+      iex> Issues.upsert_issue(%{field: ""})
       {:error, %Ecto.Changeset{}}
 
   """

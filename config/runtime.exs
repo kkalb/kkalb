@@ -20,6 +20,8 @@ if System.get_env("PHX_SERVER") do
   config :kkalb, KkalbWeb.Endpoint, server: true
 end
 
+config :kkalb, :github, api_key: System.get_env("GITHUB_ACCESS_KEY", "")
+
 if config_env() == :prod do
   # The secret key base is managed by Gigalixir
   secret_key_base =

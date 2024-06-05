@@ -2,13 +2,25 @@ defmodule Kkalb.Issues.IssuesTest do
   use Kkalb.RepoCase, async: true
   alias Kkalb.Issues
 
-  test "seeded list_issues/0 returns issues" do
-    [issue | _] = Issues.list_issues()
-    assert %Issues.Issue{} = issue
+  # doctest Kkalb.Issues
+
+  test "seeded list_issues/0 returns all issues" do
+    assert Issues.list_issues() |> length() == 5
   end
 
-  test "count_open_issues/0 returns 1" do
-    assert 1 = Issues.count_open_issues()
+  test "seeded list_issues/1 returns 2 issues" do
+    nv_start_date = ~N[2024-05-20 00:00:00.000000]
+    start_date = DateTime.from_naive!(nv_start_date, "Etc/UTC")
+
+    [issue_1, issue_2, issue_3] = Issues.list_issues(nv_start_date)
+    assert Date.compare(issue_1.gh_created_at, start_date) == :gt
+    assert Date.compare(issue_2.gh_created_at, start_date) == :gt
+    assert Date.compare(issue_3.gh_created_at, start_date) == :lt
+    assert Date.compare(issue_3.gh_closed_at, start_date) == :gt
+  end
+
+  test "count_open_issues_before/0 returns 1" do
+    assert 1 = Issues.count_open_issues_before()
   end
 
   test "upsert_issue/1" do

@@ -16,7 +16,7 @@ defmodule KkalbWeb.Router do
 
   scope "/", KkalbWeb do
     pipe_through :browser
-    get("/", PageController, :home)
+    live("/", Live.Home)
 
     live("/live", Live.GithubIssueVis.Index)
     live("/gameoflife", Live.GameOfLife.Index)
