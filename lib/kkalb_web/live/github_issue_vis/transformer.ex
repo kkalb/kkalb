@@ -2,16 +2,6 @@ defmodule KkalbWeb.Live.GithubIssueVis.Transformer do
   alias KkalbWeb.Live.GithubIssueVis.ChartData
   alias Kkalb.Issues
 
-  # %Kkalb.Issues.Issue{
-  #   id: Decimal.new("5"),
-  #   number: 1005,
-  #   gh_created_at: ~U[2024-05-29 12:00:00Z],
-  #   gh_updated_at: ~U[2024-05-29 13:00:00Z],
-  #   gh_closed_at: nil,
-  #   inserted_at: ~N[2024-06-04 13:00:55],
-  #   updated_at: ~N[2024-06-04 13:00:55]
-  # }
-
   @spec convert([%Issues.Issue{}], NaiveDateTime.t()) :: %ChartData{} | any()
   def convert(issues, nv_start_date) do
     # we need to know what the current amount of unclosed issues is
@@ -27,27 +17,7 @@ defmodule KkalbWeb.Live.GithubIssueVis.Transformer do
       IO.inspect("#{created} -> #{closed}")
     end)
 
-    # still decreasing order, from 'now' to the 'past'
-    issues_map =
-      Enum.reduce(issues, %{}, fn issue, acc ->
-        created_at = DateTime.to_date(issue.gh_created_at)
-
-        if is_nil(issue.gh_closed_at) do
-          if Date.before?(created_at, start_date) do
-            acc
-          else
-            acc |> Map.update(created_at, 1, &(&1 + 1))
-          end
-        else
-          closed_at = DateTime.to_date(issue.gh_closed_at)
-
-          if Date.before?(created_at, start_date) do
-            acc |> Map.update(closed_at, -1, &(&1 - 1))
-          else
-            acc |> Map.update(created_at, 1, &(&1 + 1)) |> Map.update(closed_at, -1, &(&1 - 1))
-          end
-        end
-      end)
+    issues_map = build_map(issues, start_date)
 
     IO.inspect(issues_map)
 
@@ -72,6 +42,31 @@ defmodule KkalbWeb.Live.GithubIssueVis.Transformer do
       chart_values: %{values: values},
       chart_title: %{title: "Number of Elixir issues on Github over time"}
     }
+  end
+
+  defp build_map(issues, start_date) do
+    # still decreasing order, from 'now' to the 'past'
+    Enum.reduce(issues, %{}, fn issue, acc ->
+      created_at = DateTime.to_date(issue.gh_created_at)
+      closed? = not is_nil(issue.gh_closed_at)
+      created_before? = Date.before?(created_at, start_date)
+
+      case {closed?, created_before?} do
+        {false, true} ->
+          acc
+
+        {false, false} ->
+          acc |> Map.update(created_at, 1, &(&1 + 1))
+
+        {true, true} ->
+          closed_at = DateTime.to_date(issue.gh_closed_at)
+          acc |> Map.update(closed_at, -1, &(&1 - 1))
+
+        {true, false} ->
+          closed_at = DateTime.to_date(issue.gh_closed_at)
+          acc |> Map.update(created_at, 1, &(&1 + 1)) |> Map.update(closed_at, -1, &(&1 - 1))
+      end
+    end)
   end
 
   defp transform_values([], _count_issues_before, res), do: res

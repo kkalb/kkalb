@@ -13,7 +13,7 @@ defmodule KkalbWeb.Live.GithubIssueVis.Index do
   @impl true
   def mount(_params, _session, socket) do
     elements_to_query = 20
-    start_date = NaiveDateTime.new!(Date.new!(2024, 5, 1), Time.new!(0, 0, 0))
+    start_date = NaiveDateTime.new!(Date.new!(2024, 5, 29), Time.new!(0, 0, 0))
 
     {chart_data, loading} =
       if connected?(socket) do
