@@ -68,12 +68,6 @@ defmodule Kkalb.MixProject do
   defp ecto_reset(:dev), do: ["ecto.drop", "ecto.create", "ecto.migrate"]
   defp ecto_reset(_), do: []
 
-  # Aliases are shortcuts or tasks specific to the current project.
-  # For example, to install project dependencies and perform other setup tasks, run:
-  #
-  #     $ mix setup
-  #
-  # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
       "ecto.reset": ecto_reset(Mix.env()),
