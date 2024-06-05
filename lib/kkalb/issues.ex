@@ -98,4 +98,42 @@ defmodule Kkalb.Issues do
       conflict_target: :id
     )
   end
+
+  @spec upsert_issues(list()) :: non_neg_integer()
+  def upsert_issues(items) do
+    maps =
+      Enum.map(items, fn %{
+                           "created_at" => created_at,
+                           "updated_at" => updated_at,
+                           "closed_at" => closed_at,
+                           "id" => id,
+                           "number" => number
+                         } ->
+        gh_created_at = created_at && created_at |> DateTime.from_iso8601() |> elem(1)
+        gh_updated_at = updated_at && updated_at |> DateTime.from_iso8601() |> elem(1)
+        gh_closed_at = closed_at && closed_at |> DateTime.from_iso8601() |> elem(1)
+
+        %{
+          id: id,
+          number: number,
+          gh_created_at: gh_created_at,
+          gh_updated_at: gh_updated_at,
+          gh_closed_at: gh_closed_at,
+          inserted_at: {:placeholder, :timestamp},
+          updated_at: {:placeholder, :timestamp}
+        }
+      end)
+
+    timestamp = NaiveDateTime.utc_now()
+
+    placeholders = %{timestamp: timestamp}
+
+    Issue
+    |> Repo.insert_all(
+      maps,
+      placeholders: placeholders,
+      on_conflict: :nothing
+    )
+    |> elem(0)
+  end
 end

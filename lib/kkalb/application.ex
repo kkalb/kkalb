@@ -7,7 +7,8 @@ defmodule Kkalb.Application do
 
   @impl true
   def start(_type, _args) do
-    _ = Oban.Telemetry.attach_default_logger()
+    # when debug is set, all oban logs will be written to the default logger as debug logs.
+    _ = Oban.Telemetry.attach_default_logger(level: :debug)
 
     children = [
       # Start the PubSub system

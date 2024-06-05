@@ -19,7 +19,7 @@ defmodule Kkalb.Workers.GithubFetcherWorker do
   def perform(%{args: %{"backfill_date" => backfill_date}}) do
     date = Date.from_iso8601!(backfill_date)
 
-    {rate_limit_remaining, rate_limit_reset} = InsertIssues.run_task(100, date)
+    {rate_limit_remaining, rate_limit_reset, issues_created} = InsertIssues.run_task(100, date)
 
     rate_limit_remaining = String.to_integer(rate_limit_remaining)
 
@@ -30,15 +30,20 @@ defmodule Kkalb.Workers.GithubFetcherWorker do
         Date.before?(date, @first_issue_date) ->
           Logger.info("Stop rescheduling since date reached #{backfill_date}")
 
-        # when we reached the rate limit, we reschedule the same date
+        # when we reached the rate limit, we reschedule the same date but wait longer
         rate_limit_remaining <= 1 ->
-          %{"backfill_date" => date}
+          %{"backfill_date" => Date.add(date, -14)}
           |> new(schedule_in: wait_time)
           |> Oban.insert!()
 
         # as long as the backfill date is later than the stop date, we continue rescheduling
         true ->
-          %{"backfill_date" => Date.add(date, -10)}
+          IO.inspect(backfill_date, label: "input")
+          backfill_date = if issues_created >= 100, do: Date.add(date, 30), else: Date.add(date, -60)
+          IO.inspect(backfill_date, label: "input")
+          IO.inspect(issues_created)
+
+          %{"backfill_date" => backfill_date}
           |> new(schedule_in: wait_time)
           |> Oban.insert!()
       end
@@ -46,6 +51,9 @@ defmodule Kkalb.Workers.GithubFetcherWorker do
     :ok
   end
 
+  @doc """
+  When backfill_date not provided, we take the utc_today.
+  """
   def perform(_) do
     _job =
       %{"backfill_date" => Date.utc_today()}

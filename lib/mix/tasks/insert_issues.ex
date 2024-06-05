@@ -15,11 +15,11 @@ defmodule Mix.Tasks.InsertIssues do
   def run(_args) do
     _ = Application.ensure_all_started(:httpoison)
     _ = Application.ensure_all_started(:kkalb)
-
+    # TODO: test or delete
     run_task(@elements_to_query, Date.new!(2011, 2, 1))
   end
 
-  @spec run_task(any(), Date.t()) :: {binary(), binary()}
+  @spec run_task(any(), Date.t()) :: {binary(), binary(), non_neg_integer()}
   def run_task(elements_to_query, date) do
     response = request_github(elements_to_query, date)
 
@@ -29,20 +29,20 @@ defmodule Mix.Tasks.InsertIssues do
     {_, rate_limit_reset} =
       Enum.find(response.headers, fn {h, _} -> h == "X-RateLimit-Reset" end)
 
-    :ok =
+    issues_created =
       response
       |> Map.get(:body)
       |> Jason.decode!()
       |> insert()
 
-    {rate_limit_remaining, rate_limit_reset}
+    {rate_limit_remaining, rate_limit_reset, issues_created}
   end
 
   defp request_github(elements_to_query, date) do
     date = Date.to_string(date)
     # TODO: separate elements to query from form input elements
     endpoint =
-      "https://api.github.com/search/issues?per_page=#{elements_to_query}&q=repo:elixir-lang/elixir+type:issue+created:<#{date}"
+      "https://api.github.com/search/issues?per_page=100&sort=created&order=desc&q=repo:elixir-lang/elixir+type:issue+created:<#{date}"
 
     # read from config rather than from system each time
     [api_key: api_key] = Application.fetch_env!(:kkalb, :github)
@@ -54,25 +54,13 @@ defmodule Mix.Tasks.InsertIssues do
     HTTPoison.get!(endpoint, headers)
   end
 
-  defp insert(%{"items" => items} = _chart_data) do
-    # TODO: change to upsert_all
-    Enum.each(items, fn %{
-                          "closed_at" => closed_at,
-                          "created_at" => created_at,
-                          "id" => id,
-                          "number" => number,
-                          "updated_at" => updated_at
-                        } ->
-      {:ok, _issue} =
-        Issues.upsert_issue(%{
-          id: id,
-          number: number,
-          gh_created_at: created_at,
-          gh_updated_at: updated_at,
-          gh_closed_at: closed_at
-        })
-    end)
+  @spec insert(map()) :: non_neg_integer()
+  defp insert(%{"items" => items}) do
+    Issues.upsert_issues(items)
   end
 
-  defp insert(%{"message" => message}), do: Logger.error(message)
+  defp insert(%{"message" => message}) do
+    Logger.error(message)
+    0
+  end
 end
