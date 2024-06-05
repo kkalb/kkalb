@@ -50,7 +50,7 @@ defmodule Kkalb.Issues do
   def count_open_issues_before(end_date) do
     query =
       from(i in Issue,
-        where: is_nil(i.gh_closed_at),
+        where: is_nil(i.gh_closed_at) or i.gh_closed_at >= ^end_date,
         where: i.gh_created_at < ^end_date
       )
 

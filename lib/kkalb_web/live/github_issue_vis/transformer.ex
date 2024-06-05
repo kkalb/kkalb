@@ -7,19 +7,15 @@ defmodule KkalbWeb.Live.GithubIssueVis.Transformer do
     # we need to know what the current amount of unclosed issues is
     # since we no longer query all issues for every single visualisation
     count_open_issues_before = Issues.count_open_issues_before(nv_start_date)
-
     start_date = NaiveDateTime.to_date(nv_start_date)
-    IO.inspect(count_open_issues_before, label: "count")
 
-    Enum.each(Enum.sort_by(Issues.list_issues(), fn i -> i.gh_created_at end, Date), fn issue ->
-      created = issue.gh_created_at
-      closed = issue.gh_closed_at
-      IO.inspect("#{created} -> #{closed}")
-    end)
+    # Enum.each(Enum.sort_by(Issues.list_issues(), fn i -> i.gh_created_at end, Date), fn issue ->
+    #   created = issue.gh_created_at
+    #   closed = issue.gh_closed_at
+    #   IO.inspect("#{created} -> #{closed}")
+    # end)
 
     issues_map = build_map(issues, start_date)
-
-    IO.inspect(issues_map)
 
     {labels, values} =
       issues_map
@@ -32,9 +28,7 @@ defmodule KkalbWeb.Live.GithubIssueVis.Transformer do
     # values is a list of changes, so issues per day is
     # [1, 1, 1, 1, 1] caluclated. Now we need to apply the issues that were already opened before
     # which is two in the test case. One for the one opened at the 2024-05-29 and one was opened at 2024-04-01.
-    IO.inspect(values)
     values = transform_values(values, count_open_issues_before, [])
-    IO.inspect(values)
 
     %ChartData{
       chart_headings: %{headings: ["# of Elixir issues on Github"]},
@@ -69,7 +63,7 @@ defmodule KkalbWeb.Live.GithubIssueVis.Transformer do
     end)
   end
 
-  defp transform_values([], _count_issues_before, res), do: res
+  defp transform_values([], _count_issues_before, res), do: Enum.reverse(res)
 
   defp transform_values([value | values], count_issues, res) do
     transform_values(values, count_issues + value, [count_issues + value | res])
