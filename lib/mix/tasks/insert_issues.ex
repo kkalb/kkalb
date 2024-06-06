@@ -38,7 +38,7 @@ defmodule Mix.Tasks.InsertIssues do
     {rate_limit_remaining, rate_limit_reset, issues_created}
   end
 
-  defp request_github(elements_to_query, date) do
+  defp request_github(_elements_to_query, date) do
     date = Date.to_string(date)
     # TODO: separate elements to query from form input elements
     endpoint =

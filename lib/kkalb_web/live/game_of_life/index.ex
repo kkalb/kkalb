@@ -162,15 +162,15 @@ defmodule KkalbWeb.Live.GameOfLife.Index do
   @impl Phoenix.LiveView
   def render(assigns) do
     ~H"""
-    <div class="h-[100%]">
+    <div class="h-full">
       <.header text="Game of Life">
         Conway's Game of Life is one of the most fascinating things to watch on an computer.
       </.header>
 
-      <div class="flex flex-col justify-center items-center w-full h-[80%]">
+      <div class="flex flex-col justify-center items-center gap-y-2">
         <.buttons timer_ref={@timer_ref} />
 
-        <div class="flex w-full items-center h-full w-full">
+        <div class="flex w-full items-center h-full">
           <div class="flex justify-center w-full h-full">
             <.grid cells={@cells} />
 
@@ -185,21 +185,19 @@ defmodule KkalbWeb.Live.GameOfLife.Index do
 
   defp buttons(assigns) do
     ~H"""
-    <div class="flex flex-row justify-center items-center h-full gap-4 w-96">
-      <div class="flex flex-row justify-between gap-4 w-full h-full my-2">
-        <.button phx-click="spawn" class="">
-          Spawn cells
-        </.button>
-        <.button phx-click="spawn" phx-value-type="glider">
-          Spawn glider
-        </.button>
-        <.button phx-click="start_timer" disabled={not is_nil(@timer_ref)}>
-          Start/Continue
-        </.button>
-        <.button phx-click="stop_timer" disabled={is_nil(@timer_ref)}>
-          Pause
-        </.button>
-      </div>
+    <div class="flex flex-row justify-center md:gap-4 gap-2 w-1/2 h-full">
+      <.button phx-click="spawn" class="">
+        Spawn cells
+      </.button>
+      <.button phx-click="spawn" phx-value-type="glider">
+        Spawn glider
+      </.button>
+      <.button phx-click="start_timer" disabled={not is_nil(@timer_ref)}>
+        <.icon name="hero-play" class="w-6 h-6" />
+      </.button>
+      <.button phx-click="stop_timer" disabled={is_nil(@timer_ref)}>
+        <.icon name="hero-pause" class="w-6 h-6" />
+      </.button>
     </div>
     """
   end
@@ -223,7 +221,10 @@ defmodule KkalbWeb.Live.GameOfLife.Index do
         <div id={"row-#{x_idx}"} class="flex flex-row">
           <%= for {y_idx, cell} <- row_data do %>
             <%!-- cell --%>
-            <div class="m-0 h-4 w-4 border w-4 h-4" id={"cell-#{x_idx}-#{y_idx}"}>
+            <div
+              class="m-0 h-2 w-2 md:h-3 md:w-3 lg:h-4 lg:w-4 border border-cgray/50"
+              id={"cell-#{x_idx}-#{y_idx}"}
+            >
               <.cell cell={cell} />
             </div>
           <% end %>

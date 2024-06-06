@@ -16,6 +16,8 @@ fontFamily['sans'] = [
 ];
 
 module.exports = {
+  // TODO: check if purge is useful
+  mode: "jit",
   content: [
     "./js/**/*.js",
     "../lib/*_web.ex",

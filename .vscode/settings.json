@@ -1,3 +1,15 @@
 {
-    "editor.formatOnSave": true
+    "editor.formatOnSave": true,
+    "tailwindCSS.includeLanguages": {
+        "html": "html",
+        "javascript": "javascript",
+        "css": "css",
+        "elixir": "html"
+    },
+    "editor.quickSuggestions": {
+        "strings": true
+    },
+    "files.associations": {
+        "*.css": "tailwindcss"
+    },
 }

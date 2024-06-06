@@ -15,7 +15,7 @@ defmodule KkalbWeb.Live.Chart.Line.Component do
 
     ~H"""
     <canvas
-      class="bg-cgray rounded"
+      class="bg-cgray rounded w-full h-full"
       id="line_chart"
       name="line_chart"
       phx-update="ignore"

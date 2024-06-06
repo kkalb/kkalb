@@ -36,11 +36,17 @@ defmodule KkalbWeb.Live.GithubIssueVis.Index do
      |> assign(elements_to_query: elements_to_query)}
   end
 
-  @impl true
-  def handle_event("change_elements_to_query", %{"count" => _elements}, socket) do
-    issues = Issues.list_issues(socket.assigns.start_date)
-    chart_data = Transformer.convert(issues, socket.assigns.start_date)
+  def handle_event("change_elements_to_query", %{"start_date" => ""}, socket) do
+    {:noreply, socket}
+  end
 
-    {:noreply, assign(socket, chart_data: chart_data)}
+  @impl true
+  def handle_event("change_elements_to_query", %{"start_date" => start_date}, socket) do
+    start_date = start_date |> Date.from_iso8601!() |> NaiveDateTime.new!(Time.new!(0, 0, 0))
+
+    issues = Issues.list_issues(start_date)
+    chart_data = Transformer.convert(issues, start_date)
+
+    {:noreply, socket |> assign(chart_data: chart_data) |> assign(start_date: start_date)}
   end
 end

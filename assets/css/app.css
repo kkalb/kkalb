@@ -19,3 +19,17 @@
     height: 100%;
     z-index: -100;
 }
+
+@layer components {
+    .sidebar-icon {
+        @apply relative flex items-center justify-center scale-100
+        rounded-3xl hover:rounded-2xl transition-all duration-300 ease-linear cursor-pointer
+        h-12 w-12 my-2 mx-auto text-corange bg-cdark/80 shadow-sm shadow-corange;
+    }
+
+    .sidebar-tooltip {
+        @apply absolute w-auto p-2 m-2 min-w-max left-14 rounded-md shadow-md 
+        text-cwhite bg-cgray text-xs font-bold transition-all duration-100 scale-0 origin-left;
+    }
+
+}

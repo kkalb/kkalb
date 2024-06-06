@@ -669,26 +669,29 @@ defmodule KkalbWeb.CoreComponents do
     for {^field, {msg, opts}} <- errors, do: translate_error({msg, opts})
   end
 
-  attr :class, :string, default: ""
-
   def sidebar(assigns) do
     ~H"""
-    <div class={"text-cwhite bg-cgray/80 border-r border-corange/40 " <> @class}>
-      <nav id="sidebar" class="flex flex-col h-full w-full p-4 gap-4">
-        <h1 class="text-[30px]/[60px]">
-          Nav
-        </h1>
-        <.nav_button class="h-8 w-32" path="/" text="Main" />
-        <.nav_button class="h-8 w-32" path="/live" text="Portfolio" />
-        <.nav_button class="h-8 w-32" path="/gameoflife" text="Game of Life" />
-      </nav>
+    <div class="bottom-0 items-center fixed md:top-0 md:h-screen w-full h-20 md:w-20 m-0 flex-row md:flex-col bg-cgray text-white shadow-lg shadow-cgray flex">
+      <.sidebar_icon icon="hero-home-solid" href="/" tooltip="Home" />
+      <.sidebar_icon icon="hero-chart-bar-solid" href="/live" tooltip="Github Vis" />
+      <.sidebar_icon icon="hero-puzzle-piece-solid" href="/gameoflife" tooltip="Game of Life" />
     </div>
     """
   end
 
-  def footer(assigns) do
+  defp sidebar_icon(assigns) do
     ~H"""
-    <footer class="fixed bottom-0 bg-cgray/25 left-0 right-0 border-t border-corange/20 h-[10%] shadow text-cwhite">
+    <a class="sidebar-icon group" href={@href}>
+      <.icon name={@icon} class="w-6 h-6" />
+      <span class="sidebar-tooltip group-hover:scale-100"><%= @tooltip %></span>
+    </a>
+    """
+  end
+
+  def footer(assigns) do
+    # TODO: reactivate footer
+    ~H"""
+    <footer class="hidden md:fixed bottom-0 bg-cgray/25 left-0 right-0 border-t border-corange/20 h-[10%] shadow text-cwhite">
       <ul class="flex flex-row justify-center mt-2 gap-x-4">
         <li class="">
           <a rel="noopener nofollow" target="_blank" href="https://github.com/kkalb">
