@@ -443,6 +443,30 @@ defmodule KkalbWeb.CoreComponents do
     """
   end
 
+  def input(%{type: "date"} = assigns) do
+    date = assigns.value |> NaiveDateTime.to_date() |> Date.to_iso8601()
+    classes = if Map.has_key?(assigns.rest, :readonly), do: "hover:cursor-default font-normal disabled", else: ""
+    assigns = assign(assigns, date: date, classes: classes)
+
+    ~H"""
+    <div phx-feedback-for={@name}>
+      <.label for={@id}><%= @label %></.label>
+      <input
+        type="text"
+        id={@id}
+        phx-hook="Pickr"
+        defaultDate={@date}
+        data-date={@date}
+        class={[
+          "flex mt-2 w-full rounded-lg accent-corange text-cwhite font-bold bg-cgray focus:ring-0 focus:ring-corange sm:text-sm sm:leading-6",
+          @classes
+        ]}
+        {@rest}
+      />
+    </div>
+    """
+  end
+
   # All other inputs text, datetime-local, url, password, etc. are handled here...
   def input(assigns) do
     ~H"""

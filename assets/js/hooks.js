@@ -1,4 +1,5 @@
 import LineChart from "./line-chart";
+import flatpickr from "flatpickr";
 
 let Hooks = {};
 
@@ -32,5 +33,27 @@ Hooks.LineChart = {
     this.chart = new LineChart(this.el, labels, values, headings, title);
   },
 };
+
+Hooks.Pickr = {
+  mounted() {
+    this.initPickr()
+  },
+  updated() {
+    this.initPickr()
+  },
+  initPickr() {
+    flatpickr(this.el, {
+      enableTime: false,
+      dateFormat: "Y-m-d",
+      onChange: this.handleDateChange.bind(this),
+      defaultDate: this.el.dataset.date,
+      maxDate: new Date().toISOString().slice(0, 10)
+    });
+  },
+  handleDateChange(selectedDates, dateStr, instance) {
+    this.pushEvent("date_selected", { date: dateStr });
+  }
+}
+
 
 export default Hooks;

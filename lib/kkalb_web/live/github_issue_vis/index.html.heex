@@ -4,15 +4,30 @@
   <.header text="GitHub Issue Visualizer"></.header>
   <div class="flex items-center justify-center">
     <div class="flex items-center justify-center flex-col mr-2 p-2 gap-2 md:w-3/4 w-full">
-      <.simple_form for={%{}} phx-change="change_elements_to_query" class="w-full h-full">
-        <.label>
-          Elements to query
-        </.label>
-        <.input type="date" name="start_date" value={@elements_to_query} />
-      </.simple_form>
-
-      <div class="h-72 md:h-[500px] w-full">
+      <div :if={not @loading} class="h-72 md:h-[500px] w-full">
         <Chart.Line.Component.render chart_data={@chart_data} />
+      </div>
+      <div class="flex flex-row w-full gap-2">
+        <.simple_form for={%{}} class="w-3/4 h-full">
+          <.input
+            id="start_date_pickr"
+            type="date"
+            name="start_date"
+            value={@start_date}
+            label="Selectable start date"
+          />
+        </.simple_form>
+        <div class="w-1/4 h-full">
+          <.input
+            label="End date"
+            disabled
+            readonly
+            id="readonly_date"
+            type="date"
+            name="readonly_date"
+            value={NaiveDateTime.utc_now()}
+          />
+        </div>
       </div>
     </div>
   </div>
