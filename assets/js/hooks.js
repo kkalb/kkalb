@@ -103,7 +103,8 @@ Hooks.Canvas = {
     for (let row in grid) {
       for (let col in grid[row]) {
         val = grid[row][col]
-        if (val == 'alive') {
+        // 1 means alive
+        if (val == 1) {
           context.fillStyle = corange;
           context.fillRect(row * 10, col * 10, 10, 10);
         }

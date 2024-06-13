@@ -4,20 +4,20 @@ defmodule KkalbWeb.Live.GameOfLife.Index do
   """
   use KkalbWeb, :live_view
 
+  @dead 0
+  @alive 1
+
   @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
     # size is 720 / 10
     size = 72
 
-    cells = build_empty_cells(size)
-    timer_speed = "500"
-
     {:ok,
      socket
-     |> assign(cells: cells)
+     |> assign(cells: build_empty_cells(size))
      |> assign(size: size)
      |> assign(timer_ref: nil)
-     |> assign(timer_speed: timer_speed)}
+     |> assign(timer_speed: "500")}
   end
 
   @impl Phoenix.LiveView
@@ -26,7 +26,7 @@ defmodule KkalbWeb.Live.GameOfLife.Index do
   end
 
   @impl Phoenix.LiveView
-  def handle_event("spawn", %{"type" => "glider"}, socket) do
+  def handle_event("spawn_glider", _, socket) do
     glider_cells =
       socket.assigns.cells
       |> revive(3, 3)
@@ -41,7 +41,7 @@ defmodule KkalbWeb.Live.GameOfLife.Index do
   end
 
   @impl Phoenix.LiveView
-  def handle_event("spawn", _, socket) do
+  def handle_event("spawn_random", _, socket) do
     size = socket.assigns.size
     default_range = 0..(size - 1)
 
@@ -56,13 +56,11 @@ defmodule KkalbWeb.Live.GameOfLife.Index do
   end
 
   def handle_event("start_timer", _, socket) do
-    timer_ref = start_timer(socket.assigns.timer_speed)
-    {:noreply, assign(socket, timer_ref: timer_ref)}
+    {:noreply, assign(socket, timer_ref: start_timer(socket.assigns.timer_speed))}
   end
 
   def handle_event("stop_timer", _, socket) do
-    nil = stop_timer(socket.assigns.timer_ref)
-    {:noreply, assign(socket, timer_ref: nil)}
+    {:noreply, assign(socket, timer_ref: stop_timer(socket.assigns.timer_ref))}
   end
 
   @doc """
@@ -105,7 +103,7 @@ defmodule KkalbWeb.Live.GameOfLife.Index do
   end
 
   defp build_row(row) do
-    for y <- row, into: %{}, do: {y, :dead}
+    for y <- row, into: %{}, do: {y, @dead}
   end
 
   defp do_game_cycle(%{assigns: %{cells: cells, size: size}} = socket) do
@@ -128,7 +126,7 @@ defmodule KkalbWeb.Live.GameOfLife.Index do
   end
 
   defp revive(cells, x, y) do
-    update_in(cells, [x, y], fn _ -> :alive end)
+    update_in(cells, [x, y], fn _ -> @alive end)
   end
 
   @pot_neighbours [{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}]
@@ -155,16 +153,16 @@ defmodule KkalbWeb.Live.GameOfLife.Index do
         get_in(cells, [new_row, new_col])
       end
 
-    neighbours = two_d_metrics |> Enum.filter(fn m -> m == :alive end) |> length()
+    neighbours = two_d_metrics |> Enum.filter(fn m -> m == @alive end) |> length()
     new_val = check_cell(neighbours, cell)
 
     new_val
   end
 
-  defp check_cell(neighbours, _) when neighbours < 2, do: :dead
-  defp check_cell(neighbours, :alive) when neighbours >= 2 and neighbours <= 3, do: :alive
-  defp check_cell(neighbours, :alive) when neighbours >= 3, do: :dead
-  defp check_cell(3, :dead), do: :alive
+  defp check_cell(neighbours, _) when neighbours < 2, do: @dead
+  defp check_cell(neighbours, @alive) when neighbours >= 2 and neighbours <= 3, do: @alive
+  defp check_cell(neighbours, @alive) when neighbours >= 3, do: @dead
+  defp check_cell(3, @dead), do: @alive
   defp check_cell(_, cell), do: cell
 
   @impl Phoenix.LiveView
@@ -194,10 +192,10 @@ defmodule KkalbWeb.Live.GameOfLife.Index do
   defp buttons(assigns) do
     ~H"""
     <div class="flex flex-row justify-center md:gap-4 gap-2 w-1/2 h-full">
-      <.button phx-click="spawn" class="">
+      <.button phx-click="spawn_random">
         Spawn cells
       </.button>
-      <.button phx-click="spawn" phx-value-type="glider">
+      <.button phx-click="spawn_glider">
         Spawn glider
       </.button>
       <.button phx-click="start_timer" disabled={not is_nil(@timer_ref)}>
@@ -226,9 +224,9 @@ defmodule KkalbWeb.Live.GameOfLife.Index do
     ~H"""
     <div class="m-2" id="big_canvas_div">
       <canvas
-        class="w-[1080] h-[720px] bg-cgray"
+        class="w-[720px] h-[720px] bg-cgray"
         id="big_canvas"
-        width="1080"
+        width="720"
         height="720"
         gridColor="#EF8354"
         phx-hook="Canvas"
@@ -253,13 +251,13 @@ defmodule KkalbWeb.Live.GameOfLife.Index do
   #   """
   # end
 
-  defp cell(%{cell: :dead} = assigns) do
+  defp cell(%{cell: @dead} = assigns) do
     ~H"""
     <div class="bg-cgray w-full h-full"></div>
     """
   end
 
-  defp cell(%{cell: :alive} = assigns) do
+  defp cell(%{cell: @alive} = assigns) do
     ~H"""
     <div class="bg-corange w-full h-full"></div>
     """
