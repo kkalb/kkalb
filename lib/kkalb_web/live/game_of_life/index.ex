@@ -6,7 +6,8 @@ defmodule KkalbWeb.Live.GameOfLife.Index do
 
   @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
-    size = 40
+    # size is 720 / 10
+    size = 72
 
     cells = build_empty_cells(size)
     timer_speed = "500"
@@ -34,6 +35,8 @@ defmodule KkalbWeb.Live.GameOfLife.Index do
       |> revive(5, 3)
       |> revive(5, 2)
 
+    socket = push_event(socket, "spawn", glider_cells)
+
     {:noreply, assign(socket, cells: glider_cells)}
   end
 
@@ -46,6 +49,8 @@ defmodule KkalbWeb.Live.GameOfLife.Index do
       Enum.reduce(default_range, socket.assigns.cells, fn _, cells ->
         revive(cells, Enum.random(default_range), Enum.random(default_range))
       end)
+
+    socket = push_event(socket, "spawn", new_cells)
 
     {:noreply, assign(socket, cells: new_cells)}
   end
@@ -105,6 +110,9 @@ defmodule KkalbWeb.Live.GameOfLife.Index do
 
   defp do_game_cycle(%{assigns: %{cells: cells, size: size}} = socket) do
     new_cells = may_revive(cells, size)
+
+    socket = push_event(socket, "spawn", new_cells)
+
     assign(socket, cells: new_cells)
   end
 
@@ -212,24 +220,20 @@ defmodule KkalbWeb.Live.GameOfLife.Index do
 
   # building the grid outselfes with only divs scales better than 'display: grid'
   defp grid(assigns) do
-    assigns = assign(assigns, cells: cells_to_grid(assigns.cells))
+    cells = cells_to_grid(assigns.cells)
+    assigns = assign(assigns, cells: cells)
 
     ~H"""
-    <div class="m-2">
-      <%= for {x_idx, row_data} <- @cells do %>
-        <%!-- row  --%>
-        <div id={"row-#{x_idx}"} class="flex flex-row">
-          <%= for {y_idx, cell} <- row_data do %>
-            <%!-- cell --%>
-            <div
-              class="m-0 h-2 w-2 md:h-3 md:w-3 lg:h-4 lg:w-4 border border-cgray/50"
-              id={"cell-#{x_idx}-#{y_idx}"}
-            >
-              <.cell cell={cell} />
-            </div>
-          <% end %>
-        </div>
-      <% end %>
+    <div class="m-2" id="big_canvas_div">
+      <canvas
+        class="w-[1080] h-[720px] bg-cgray"
+        id="big_canvas"
+        width="1080"
+        height="720"
+        gridColor="#EF8354"
+        phx-hook="Canvas"
+      >
+      </canvas>
     </div>
     """
   end

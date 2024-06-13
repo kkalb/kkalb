@@ -37,7 +37,7 @@ Work in progress
 - [x] Seed DB
 - [x] Write integration tests
 
-### GitHub API
+### [GitHub API](https://github.com/elixir-lang/elixir/issues)
 
 - [x] Add Oban for scheduling API requests to GitHub
 - [x] Create recursion job for fetching data
@@ -53,8 +53,8 @@ Work in progress
 
 ## Still TODO
 
+- [x] Date picking for issue visualisation
 - [ ] Responsive design
 - [ ] Oban job for cyclic fetching of issue changes (created and closed)
-- [ ] Date picking for issue visualisation
 - [ ] Try canvas grid with interaction (mouse-click and mouse-down for dropping life)
 
