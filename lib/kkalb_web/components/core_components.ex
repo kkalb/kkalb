@@ -713,9 +713,9 @@ defmodule KkalbWeb.CoreComponents do
   end
 
   def footer(assigns) do
-    # TODO: reactivate footer
+    # TODO: fix footer for gameoflife
     ~H"""
-    <footer class="hidden md:fixed bottom-0 bg-cgray/25 left-0 right-0 border-t border-corange/20 h-[10%] shadow text-cwhite">
+    <footer class="md:fixed bottom-0 bg-cgray/25 left-0 right-0 border-t border-corange/20 h-[10%] shadow text-cwhite">
       <ul class="flex flex-row justify-center mt-2 gap-x-4">
         <li class="">
           <a rel="noopener nofollow" target="_blank" href="https://github.com/kkalb">
