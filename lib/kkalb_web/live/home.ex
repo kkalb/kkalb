@@ -19,9 +19,9 @@ defmodule KkalbWeb.Live.Home do
   @impl Phoenix.LiveView
   def render(assigns) do
     ~H"""
-    <div class="h-full w-full">
-      <.header text="Portfolio"></.header>
-      <.button type="button" phx-click="download_portfolio" class="absolute top-2 right-8">
+    <div class="h-full w-full overflow-auto">
+      <.header text="Portfolio - WIP"></.header>
+      <.button type="button" phx-click="download_portfolio" class="absolute top-2 right-1 sm:right-8">
         <span>Download Portfolio</span>
       </.button>
       <.left_row title="Caregiving" date="2024 - now ">
@@ -107,7 +107,7 @@ defmodule KkalbWeb.Live.Home do
   def textblock(assigns) do
     ~H"""
     <div class={[
-      "sm:block col-span-4 p-4 pt-2 mb-4 bg-cgray/80 border border-corange/50 text-cwhite rounded-md max-w-screen-sm overflow-none",
+      "sm:block col-span-4 p-4 pt-2 mb-4 bg-cgray/80 border border-corange/50 text-cwhite rounded-md max-w-screen-sm",
       @class
     ]}>
       <p class="font-bold text-xl whitespace-normal mb-2">
