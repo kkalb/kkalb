@@ -20,5 +20,7 @@ defmodule KkalbWeb.Router do
 
     live("/live", Live.GithubIssueVis.Index)
     live("/gameoflife", Live.GameOfLife.Index)
+
+    get "/download_portfolio", DownloadController, :download_portfolio
   end
 end
