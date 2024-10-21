@@ -10,7 +10,7 @@ defmodule KkalbWeb.Live.GameOfLife.Index do
   @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
     # size is 720 / 10
-    size = 72
+    size = 25
 
     {:ok,
      socket
@@ -216,18 +216,18 @@ defmodule KkalbWeb.Live.GameOfLife.Index do
     |> Enum.sort_by(fn {x, _row} -> x end, :asc)
   end
 
-  # building the grid outselfes with only divs scales better than 'display: grid'
+  # building the grid ourselfes with only divs scales better than 'display: grid'
   defp grid(assigns) do
     cells = cells_to_grid(assigns.cells)
     assigns = assign(assigns, cells: cells)
 
     ~H"""
-    <div class="m-2" id="big_canvas_div">
+    <div class="mt-2" id="big_canvas_div">
       <canvas
-        class="w-[720px] h-[720px] bg-cgray"
+        class="sm:w-[500px] sm:h-[500px] w-[250px] h-[250px] bg-cgray border-white border"
         id="big_canvas"
-        width="720"
-        height="720"
+        width="250"
+        height="250"
         gridColor="#EF8354"
         phx-hook="Canvas"
       >
