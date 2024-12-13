@@ -27,7 +27,7 @@ config :kkalb, Kkalb.Scheduler,
   jobs: [
     github_fetcher_worker: [
       schedule: "* * * * *",
-      task: fn -> Kkalb.Workers.GithubFetcherWorker.perform(%{}) end,
+      task: {Kkalb.Workers.GithubFetcherWorker, :perform, [%{}]},
       overlap: false
     ]
   ],
