@@ -7,8 +7,8 @@
       <div :if={not @loading} class="h-72 md:h-[500px] w-full">
         <Chart.Line.Component.render chart_data={@chart_data} />
       </div>
-      <div class="flex flex-row w-full gap-2">
-        <.simple_form for={%{}} class="w-3/4 h-full">
+      <div class="flex flex-row w-full gap-2 items-center justify-center">
+        <.simple_form for={%{}} class="w-2/4 h-full">
           <.input
             id="start_date_pickr"
             type="date"
@@ -26,6 +26,15 @@
             type="date"
             name="readonly_date"
             value={NaiveDateTime.utc_now()}
+          />
+        </div>
+        <div class="flex w-1/4 h-full items-center justify-center">
+          <.switch
+            label="DB over ETS?"
+            id="toggle_db"
+            type="switch"
+            name="toggle_db"
+            value={@use_db?}
           />
         </div>
       </div>

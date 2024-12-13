@@ -1,6 +1,8 @@
 defmodule Kkalb.Workers.GithubFetcherWorker do
   @moduledoc """
   Trigger with
+  iex -S mix ps
+  and one of the follwing in the console to start the job scheduler
   ```
   Kkalb.Workers.GithubFetcherWorker.new(%{"backfill_date" => Date.utc_today()}) |> Oban.insert()
   Kkalb.Workers.GithubFetcherWorker.new(%{}) |> Oban.insert()
@@ -38,9 +40,7 @@ defmodule Kkalb.Workers.GithubFetcherWorker do
 
         # as long as the backfill date is later than the stop date, we continue rescheduling
         true ->
-          IO.inspect(backfill_date, label: "input")
           backfill_date = if issues_created >= 100, do: Date.add(date, 30), else: Date.add(date, -60)
-          IO.inspect(backfill_date, label: "input")
           IO.inspect(issues_created)
 
           %{"backfill_date" => backfill_date}
@@ -52,7 +52,7 @@ defmodule Kkalb.Workers.GithubFetcherWorker do
   end
 
   @doc """
-  When backfill_date not provided, we take the utc_today.
+  When backfill_date not provided, we take the first issue date.
   """
   def perform(_) do
     _job =

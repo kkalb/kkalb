@@ -22,6 +22,10 @@ end
 
 config :kkalb, :github, api_key: System.get_env("GITHUB_ACCESS_KEY", "")
 
+config :kkalb,
+       :issue_storage,
+       if(System.get_env("ISSUE_STORAGE_TYPE", "ETS") == "ETS", do: Kkalb.IssuesEts, else: Kkalb.Issues)
+
 if config_env() == :prod do
   # The secret key base is managed by Gigalixir
   secret_key_base =

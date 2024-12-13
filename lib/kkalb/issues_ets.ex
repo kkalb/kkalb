@@ -1,14 +1,12 @@
-defmodule Kkalb.Issues do
+defmodule Kkalb.IssuesEts do
   @moduledoc """
-  Context module for issues.
+  Context module for issues for ets table without DB.
   """
 
   @behaviour Kkalb.IssueAdapter
 
-  import Ecto.Query
-
+  alias Kkalb.EtsIssuesGenServer
   alias Kkalb.Issues.Issue
-  alias Kkalb.Repo
 
   @doc """
   Returns the list of issues.
@@ -21,23 +19,38 @@ defmodule Kkalb.Issues do
   """
   @spec list_issues(NaiveDateTime.t()) :: [Issue.t()]
   def list_issues(start_date) do
-    query =
-      from(i in Issue,
-        order_by: [desc: i.gh_created_at],
-        where: i.gh_created_at >= ^start_date or i.gh_closed_at >= ^start_date
-      )
-
-    Repo.all(query)
+    EtsIssuesGenServer.list()
+    |> Enum.map(fn {_id, i} -> i end)
+    |> Enum.filter(fn i ->
+      NaiveDateTime.after?(i.gh_created_at, start_date) or is_nil(i.gh_closed_at) or
+        NaiveDateTime.after?(i.gh_closed_at, start_date)
+    end)
+    |> Enum.sort_by(fn i -> i.gh_created_at end, :desc)
+    |> Enum.map(fn i ->
+      %Issue{
+        id: i.id,
+        number: i.number,
+        gh_created_at: i.gh_created_at,
+        gh_updated_at: i.gh_updated_at,
+        gh_closed_at: i.gh_closed_at
+      }
+    end)
   end
 
   @spec list_issues() :: [Issue.t()]
   def list_issues do
-    query =
-      from(i in Issue,
-        order_by: [desc: i.gh_created_at]
-      )
-
-    Repo.all(query)
+    EtsIssuesGenServer.list()
+    |> Enum.map(fn {_id, i} -> i end)
+    |> Enum.sort_by(fn i -> i.gh_created_at end, :desc)
+    |> Enum.map(fn i ->
+      %Issue{
+        id: i.id,
+        number: i.number,
+        gh_created_at: i.gh_created_at,
+        gh_updated_at: i.gh_updated_at,
+        gh_closed_at: i.gh_closed_at
+      }
+    end)
   end
 
   @doc """
@@ -51,20 +64,15 @@ defmodule Kkalb.Issues do
   """
   @spec count_open_issues_before(NaiveDateTime.t()) :: non_neg_integer()
   def count_open_issues_before(end_date) do
-    query =
-      from(i in Issue,
-        where: is_nil(i.gh_closed_at) or i.gh_closed_at >= ^end_date,
-        where: i.gh_created_at < ^end_date
-      )
-
-    Repo.aggregate(query, :count)
+    EtsIssuesGenServer.list()
+    |> Enum.map(fn {_id, i} -> i end)
+    |> Enum.filter(fn i -> is_nil(i.gh_closed_at) or NaiveDateTime.after?(i.gh_closed_at, end_date) end)
+    |> Enum.count(fn i -> NaiveDateTime.before?(i.gh_created_at, end_date) end)
   end
 
   @spec count_open_issues() :: non_neg_integer()
   def count_open_issues do
-    query = from(i in Issue, where: is_nil(i.gh_closed_at))
-
-    Repo.aggregate(query, :count)
+    EtsIssuesGenServer.list() |> Enum.map(fn {_id, i} -> i end) |> Enum.count(fn i -> is_nil(i.gh_closed_at) end)
   end
 
   @doc """
@@ -93,13 +101,7 @@ defmodule Kkalb.Issues do
       gh_closed_at: gh_closed_at
     }
 
-    Repo.insert(
-      issue,
-      on_conflict: [
-        set: [gh_updated_at: gh_updated_at, gh_closed_at: gh_closed_at]
-      ],
-      conflict_target: :id
-    )
+    write_to_ets([issue])
   end
 
   @spec upsert_issues(list()) :: non_neg_integer()
@@ -121,22 +123,36 @@ defmodule Kkalb.Issues do
           number: number,
           gh_created_at: gh_created_at,
           gh_updated_at: gh_updated_at,
-          gh_closed_at: gh_closed_at,
-          inserted_at: {:placeholder, :timestamp},
-          updated_at: {:placeholder, :timestamp}
+          gh_closed_at: gh_closed_at
         }
       end)
 
-    timestamp = NaiveDateTime.utc_now()
+    write_to_ets(maps)
+  end
 
-    placeholders = %{timestamp: timestamp}
+  @spec write_to_ets(list()) :: non_neg_integer()
+  defp write_to_ets(items) do
+    issues_data =
+      for %{
+            id: id,
+            number: number,
+            gh_created_at: gh_created_at,
+            gh_updated_at: gh_updated_at,
+            gh_closed_at: gh_closed_at
+          } <- items do
+        issue_data =
+          {id,
+           %{
+             id: id,
+             number: number,
+             gh_created_at: gh_created_at,
+             gh_updated_at: gh_updated_at,
+             gh_closed_at: gh_closed_at
+           }}
 
-    Issue
-    |> Repo.insert_all(
-      maps,
-      placeholders: placeholders,
-      on_conflict: :nothing
-    )
-    |> elem(0)
+        Kkalb.EtsIssuesGenServer.insert(issue_data)
+      end
+
+    Enum.count(issues_data, fn i -> i == true end)
   end
 end

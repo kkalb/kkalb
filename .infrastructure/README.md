@@ -52,3 +52,10 @@ I commit to my personal git all the changes with `*_build_pack` files and lastly
 I am scared that it just worked on the first try [kkalb.com](https://kkalb.gigalixirapp.com/gameoflife) \
 has SSL activated, took ~2 min since running the push command and is free..
 
+## SSH into app
+
+Generate ssh key 
+`ssh-keygen -t ed25519 -C "your_email@example.com"`
+
+Finally, ssh into app with
+`gigalixir account:ssh_keys:add "$(cat ~/.ssh/id_ed25519.pub)"`

@@ -4,11 +4,13 @@ defmodule Mix.Tasks.InsertIssues do
   @moduledoc "Inserts issues from GitHub-API into the repo with `mix insert_issues`"
   use Mix.Task
 
-  alias Kkalb.Issues
-
   require Logger
+
+  @issue_storage Application.compile_env(:kkalb, :issue_storage)
+
   # 100 is max for the api
   @elements_to_query 100
+  @first_issue Date.new!(2011, 2, 1)
 
   # run this task locally to get all issues into the db
   @impl Mix.Task
@@ -16,7 +18,7 @@ defmodule Mix.Tasks.InsertIssues do
     _ = Application.ensure_all_started(:httpoison)
     _ = Application.ensure_all_started(:kkalb)
     # TODO: test or delete
-    run_task(@elements_to_query, Date.new!(2011, 2, 1))
+    run_task(@elements_to_query, @first_issue)
   end
 
   @spec run_task(any(), Date.t()) :: {binary(), binary(), non_neg_integer()}
@@ -56,7 +58,7 @@ defmodule Mix.Tasks.InsertIssues do
 
   @spec insert(map()) :: non_neg_integer()
   defp insert(%{"items" => items}) do
-    Issues.upsert_issues(items)
+    @issue_storage.upsert_issues(items)
   end
 
   defp insert(%{"message" => message}) do

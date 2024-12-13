@@ -16,16 +16,15 @@ config :esbuild,
     env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
   ]
 
-# default config for repo, will be overridden in other config files
 config :kkalb, Kkalb.Repo,
   database: "kkalb_repo",
   username: "postgres",
   password: "postgres",
+  # default config for repo, will be overridden in other config files
   hostname: "localhost",
   log: false,
   pool_size: 9
 
-# Configures the endpoint
 config :kkalb, KkalbWeb.Endpoint,
   url: [host: "localhost"],
   render_errors: [
@@ -44,6 +43,12 @@ config :kkalb, Oban,
   ]
 
 config :kkalb, :github, api_key: ""
+
+# pick what module is used to store issue data from github.
+# Either 'Kkalb.IssuesEts' for ETS or 'Kkalb.Issues' for PostgreSQL DB
+config :kkalb, :issue_storage, Kkalb.IssuesEts
+
+# Configures the endpoint
 config :kkalb, ecto_repos: [Kkalb.Repo]
 
 # Configures Elixir's Logger

@@ -18,7 +18,8 @@ defmodule Kkalb.Application do
       # Start the Endpoint (http/https)
       KkalbWeb.Endpoint,
       Kkalb.Repo,
-      {Oban, Application.fetch_env!(:kkalb, Oban)}
+      {Oban, Application.fetch_env!(:kkalb, Oban)},
+      Kkalb.EtsIssuesGenServer
     ]
 
     # See https://hexdocs.pm/elixir/Supervisor.html

@@ -15,6 +15,9 @@ config :kkalb, KkalbWeb.Endpoint,
   force_ssl: [rewrite_on: [:x_forwarded_proto]],
   cache_static_manifest: "priv/static/cache_manifest.json"
 
+# on prod, we use ETS because the DB costs 25$/month
+# config :kkalb, :issue_storage, Kkalb.IssuesEts
+
 config :logger, level: :info
 
 # Configures Swoosh API Client

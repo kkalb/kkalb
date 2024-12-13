@@ -40,8 +40,9 @@ npm-debug.log
 *.tfstate
 *.tfstate.*
 
-
 .elixir_ls/
 
 # build articats
 rel/overlays/bin/
+
+.env

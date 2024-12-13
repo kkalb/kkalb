@@ -2,14 +2,16 @@ defmodule KkalbWeb.Live.GithubIssueVis.Transformer do
   @moduledoc """
   Converts `Issue` structs to chart data.
   """
-  alias Kkalb.Issues
+  alias Kkalb.Issues.Issue
   alias KkalbWeb.Live.GithubIssueVis.ChartData
 
-  @spec convert([Issues.Issue.t()], NaiveDateTime.t()) :: ChartData.t() | any()
-  def convert(issues, nv_start_date) do
+  # @issue_storage Application.compile_env(:kkalb, :issue_storage)
+
+  @spec convert([Issue.t()], NaiveDateTime.t(), Module.t()) :: ChartData.t() | any()
+  def convert(issues, nv_start_date, issue_module) do
     # we need to know what the current amount of unclosed issues is
     # since we no longer query all issues for every single visualisation
-    count_open_issues_before = Issues.count_open_issues_before(nv_start_date)
+    count_open_issues_before = issue_module.count_open_issues_before(nv_start_date)
     start_date = NaiveDateTime.to_date(nv_start_date)
 
     issues_map = build_map(issues, start_date)
