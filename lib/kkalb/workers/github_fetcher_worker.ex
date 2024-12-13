@@ -8,7 +8,8 @@ defmodule Kkalb.Workers.GithubFetcherWorker do
   Kkalb.Workers.GithubFetcherWorker.new(%{}) |> Oban.insert()
   ```
   """
-  use Oban.Worker, queue: :github_fetcher_queue, max_attempts: 10
+
+  # use Oban.Worker, queue: :github_fetcher_queue, max_attempts: 10
 
   alias Mix.Tasks.InsertIssues
 
@@ -16,16 +17,16 @@ defmodule Kkalb.Workers.GithubFetcherWorker do
 
   @first_issue_date Date.new!(2011, 2, 1)
 
-  @impl Oban.Worker
-  @spec perform(any()) :: :ok
-  def perform(%{args: %{"backfill_date" => backfill_date}}) do
-    date = Date.from_iso8601!(backfill_date)
+  @spec perform(map()) :: :ok
+  def perform(%{"backfill_date" => backfill_date}) do
+    IO.inspect(backfill_date, label: "perform matched")
+    date = backfill_date
 
     {rate_limit_remaining, rate_limit_reset, issues_created} = InsertIssues.run_task(100, date)
 
     rate_limit_remaining = String.to_integer(rate_limit_remaining)
 
-    wait_time = speed_throttle(rate_limit_reset, rate_limit_remaining)
+    wait_time = speed_throttle(rate_limit_reset, rate_limit_remaining) * 1000
 
     _ =
       cond do
@@ -34,18 +35,18 @@ defmodule Kkalb.Workers.GithubFetcherWorker do
 
         # when we reached the rate limit, we reschedule the same date but wait longer
         rate_limit_remaining <= 1 ->
-          %{"backfill_date" => Date.add(date, -14)}
-          |> new(schedule_in: wait_time)
-          |> Oban.insert!()
+          IO.inspect(rate_limit_remaining, label: "rate_limit_remaining")
+          IO.inspect(rate_limit_reset, label: "rate_limit_reset")
+          IO.inspect(wait_time, label: "wait_time")
+          Process.sleep(wait_time)
+          perform(%{"backfill_date" => Date.add(date, -14)})
 
         # as long as the backfill date is later than the stop date, we continue rescheduling
         true ->
           backfill_date = if issues_created >= 100, do: Date.add(date, 30), else: Date.add(date, -60)
           IO.inspect(issues_created)
-
-          %{"backfill_date" => backfill_date}
-          |> new(schedule_in: wait_time)
-          |> Oban.insert!()
+          Process.sleep(wait_time)
+          perform(%{"backfill_date" => backfill_date})
       end
 
     :ok
@@ -54,13 +55,10 @@ defmodule Kkalb.Workers.GithubFetcherWorker do
   @doc """
   When backfill_date not provided, we take the first issue date.
   """
-  def perform(_) do
-    _job =
-      %{"backfill_date" => Date.utc_today()}
-      |> new(schedule_in: 0)
-      |> Oban.insert!()
+  def perform(args) do
+    IO.inspect(args, label: "perform unmatched")
 
-    :ok
+    perform(%{"backfill_date" => Date.utc_today(), "schedule_in" => 0})
   end
 
   # decelerate when limit gets slower
@@ -73,6 +71,7 @@ defmodule Kkalb.Workers.GithubFetcherWorker do
       |> DateTime.from_unix!()
       |> DateTime.diff(DateTime.utc_now(), :second)
 
+    IO.inspect(seconds_remaining, label: "seconds_remaining")
     Logger.info("Remaining rate #{rate_limit_remaining} for #{seconds_remaining} s")
     # we try to never reach the limit, since there can be a secondary
     # limit which we ensure not to reach with this

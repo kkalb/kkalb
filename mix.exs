@@ -4,7 +4,7 @@ defmodule Kkalb.MixProject do
   def project do
     [
       app: :kkalb,
-      version: "1.3.0",
+      version: "1.4.0",
       elixir: "~> 1.16",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
@@ -55,7 +55,8 @@ defmodule Kkalb.MixProject do
       {:typed_ecto_schema, "~> 0.4.1", runtime: false},
       {:postgrex, ">= 0.0.0"},
       {:oban, "~> 2.17"},
-      {:styler, "~> 1.0.0-rc.0", only: [:dev, :test], runtime: false}
+      {:styler, "~> 1.0.0-rc.0", only: [:dev, :test], runtime: false},
+      {:quantum, "~> 3.0"}
     ]
   end
 

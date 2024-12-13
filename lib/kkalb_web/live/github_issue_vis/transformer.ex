@@ -7,7 +7,7 @@ defmodule KkalbWeb.Live.GithubIssueVis.Transformer do
 
   # @issue_storage Application.compile_env(:kkalb, :issue_storage)
 
-  @spec convert([Issue.t()], NaiveDateTime.t(), Module.t()) :: ChartData.t() | any()
+  @spec convert([Issue.t()], NaiveDateTime.t(), any()) :: ChartData.t() | any()
   def convert(issues, nv_start_date, issue_module) do
     # we need to know what the current amount of unclosed issues is
     # since we no longer query all issues for every single visualisation

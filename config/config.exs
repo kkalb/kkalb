@@ -7,7 +7,6 @@
 # General application configuration
 import Config
 
-# Configure esbuild (the version is required)
 config :esbuild,
   version: "0.17.11",
   default: [
@@ -20,10 +19,19 @@ config :kkalb, Kkalb.Repo,
   database: "kkalb_repo",
   username: "postgres",
   password: "postgres",
-  # default config for repo, will be overridden in other config files
   hostname: "localhost",
   log: false,
   pool_size: 9
+
+config :kkalb, Kkalb.Scheduler,
+  jobs: [
+    github_fetcher_worker: [
+      schedule: "* * * * *",
+      task: fn -> Kkalb.Workers.GithubFetcherWorker.perform(%{}) end,
+      overlap: false
+    ]
+  ],
+  debug_logging: true
 
 config :kkalb, KkalbWeb.Endpoint,
   url: [host: "localhost"],
@@ -34,13 +42,13 @@ config :kkalb, KkalbWeb.Endpoint,
   pubsub_server: Kkalb.PubSub,
   live_view: [signing_salt: "ni1y7ANM"]
 
-config :kkalb, Oban,
-  engine: Oban.Engines.Basic,
-  queues: [github_fetcher_queue: 10],
-  repo: Kkalb.Repo,
-  plugins: [
-    {Oban.Plugins.Pruner, max_age: 60 * 60 * 24 * 7}
-  ]
+# config :kkalb, Oban,
+#   engine: Oban.Engines.Basic,
+#   queues: [github_fetcher_queue: 10],
+#   repo: Kkalb.Repo,
+#   plugins: [
+#     {Oban.Plugins.Pruner, max_age: 60 * 60 * 24 * 7}
+#   ]
 
 config :kkalb, :github, api_key: ""
 
@@ -54,7 +62,8 @@ config :kkalb, ecto_repos: [Kkalb.Repo]
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
-  metadata: [:request_id]
+  metadata: [:request_id],
+  level: :debug
 
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason

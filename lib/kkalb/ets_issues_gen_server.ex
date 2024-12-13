@@ -24,7 +24,7 @@ defmodule Kkalb.EtsIssuesGenServer do
 
   def init(_) do
     :ets.new(@name, [:set, :protected, :named_table])
-    %{} |> Kkalb.Workers.GithubFetcherWorker.new() |> Oban.insert()
+
     {:ok, :ets_created}
   end
 

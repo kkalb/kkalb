@@ -8,7 +8,7 @@ defmodule Kkalb.Application do
   @impl true
   def start(_type, _args) do
     # when debug is set, all oban logs will be written to the default logger as debug logs.
-    _ = Oban.Telemetry.attach_default_logger(level: :debug)
+    # _ = Oban.Telemetry.attach_default_logger(level: :debug)
 
     children = [
       # Start the PubSub system
@@ -18,7 +18,8 @@ defmodule Kkalb.Application do
       # Start the Endpoint (http/https)
       KkalbWeb.Endpoint,
       Kkalb.Repo,
-      {Oban, Application.fetch_env!(:kkalb, Oban)},
+      # {Oban, Application.fetch_env!(:kkalb, Oban)},
+      Kkalb.Scheduler,
       Kkalb.EtsIssuesGenServer
     ]
 
