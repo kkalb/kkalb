@@ -115,7 +115,7 @@ jobs:
 
     # Step: Drop, create and migrate the db
     - name: Setup database
-    - run: mix ecto.reset
+      run: mix ecto.reset
 
     # Step: Execute the tests.
     - name: Run tests
