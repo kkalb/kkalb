@@ -110,8 +110,11 @@ jobs:
     # Step: Check that the checked in code has already been formatted.
     # This step fails if something was found unformatted.
     # Customize this step as desired.
-    - name: Check Formatting
+    - name: Check formatting
       run: mix format --check-formatted
+
+    - name: Credo linting
+      run: mix credo --strict
 
     # Step: Drop, create and migrate the db
     - name: Setup database
