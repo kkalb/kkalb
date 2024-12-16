@@ -78,7 +78,7 @@ defmodule KkalbWeb.Live.GithubIssueVis.Index do
 
     ~H"""
     <div phx-feedback-for={@name} class="flex flex-col h-full w-full items-center justify-center mb-4">
-      <.label for={@id}><%= @label %></.label>
+      <.label for={@id}>{@label}</.label>
 
       <span
         phx-click="switch_state"
@@ -101,7 +101,7 @@ defmodule KkalbWeb.Live.GithubIssueVis.Index do
           "inline-block h-4 w-4 rounded-full shadow transform transition ease-in-out duration-200 -translate-y-[2px] text-cwhite",
           @pos_text
         ]}>
-          <%= if @value, do: "DB", else: "ETS" %>
+          {if @value, do: "DB", else: "ETS"}
         </span>
       </span>
     </div>

@@ -17,7 +17,7 @@ defmodule Kkalb.RepoCase do
   setup tags do
     :ok = Sandbox.checkout(Kkalb.Repo)
 
-    unless tags[:async] do
+    if !tags[:async] do
       Sandbox.mode(Kkalb.Repo, {:shared, self()})
     end
 

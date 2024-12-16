@@ -91,7 +91,7 @@ defmodule KkalbWeb.Live.Home do
       </.button>
 
       <.right_row :for={ele <- @journey} title={ele.title} date={ele.date} id={ele.id} focus={@focus}>
-        <%= ele.text %>
+        {ele.text}
       </.right_row>
 
       <.footer />
@@ -111,7 +111,7 @@ defmodule KkalbWeb.Live.Home do
       <div class="col-span-1 col-start-1" />
       <.divider date={@date} focus={@focus == @id} dir="right" />
       <.textblock title={@title} id={@id} focus={@focus}>
-        <%= render_slot(@inner_block) %>
+        {render_slot(@inner_block)}
       </.textblock>
     </div>
     """
@@ -137,16 +137,16 @@ defmodule KkalbWeb.Live.Home do
       ]}
     >
       <p :if={not @focused?} class="font-normal text-normal whitespace-normal mb-2">
-        <%= @title %>
+        {@title}
       </p>
       <p :if={@focused?} class="font-bold text-xl whitespace-normal mb-2">
-        <%= @title %>
+        {@title}
       </p>
       <p :if={not @focused?} class="whitespace-normal text-xs">
-        <%= render_slot(@inner_block) %>
+        {render_slot(@inner_block)}
       </p>
       <p :if={@focused?} class="whitespace-normal">
-        <%= render_slot(@inner_block) %>
+        {render_slot(@inner_block)}
       </p>
     </button>
     """
@@ -174,7 +174,7 @@ defmodule KkalbWeb.Live.Home do
     <div class={["flex items-center flex-col h-full whitespace-nowrap", @text_color]}>
       <div class="flex flex-row items-center">
         <div :if={@dir == "right"} class="absolute">
-          <p class={["relative right-24"]}><%= @date %></p>
+          <p class={["relative right-24"]}>{@date}</p>
         </div>
         <div class={["relative rounded-[50%]", @bg_color, @circle]} />
       </div>
