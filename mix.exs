@@ -40,7 +40,7 @@ defmodule Kkalb.MixProject do
       {:phoenix, "~> 1.7.7"},
       {:phoenix_html, "~> 3.3"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:phoenix_live_view, "~> 0.19.0"},
+      {:phoenix_live_view, "~> 1.0.1"},
       {:floki, ">= 0.30.0", only: :test},
       {:esbuild, "~> 0.7", runtime: Mix.env() == :dev},
       {:tailwind, "~> 0.2.0", runtime: Mix.env() == :dev},
@@ -55,7 +55,7 @@ defmodule Kkalb.MixProject do
       {:typed_ecto_schema, "~> 0.4.1", runtime: false},
       {:postgrex, ">= 0.0.0"},
       {:oban, "~> 2.17"},
-      {:styler, "~> 1.0.0-rc.0", only: [:dev, :test], runtime: false},
+      {:styler, "~> 1.2.1", only: [:dev, :test], runtime: false},
       {:quantum, "~> 3.0"}
     ]
   end
