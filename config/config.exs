@@ -7,6 +7,8 @@
 # General application configuration
 import Config
 
+alias Kkalb.Workers.GithubFetcherWorker
+
 config :esbuild,
   version: "0.17.11",
   default: [
@@ -25,9 +27,14 @@ config :kkalb, Kkalb.Repo,
 
 config :kkalb, Kkalb.Scheduler,
   jobs: [
-    github_fetcher_worker: [
+    github_fetcher_once_instant: [
       schedule: "* * * * *",
-      task: {Kkalb.Workers.GithubFetcherWorker, :perform, [%{}]},
+      task: {GithubFetcherWorker, :perform, [%{"backfill_date" => Date.utc_today()}]},
+      overlap: false
+    ],
+    github_fetcher_hourly: [
+      schedule: "@hourly",
+      task: {GithubFetcherWorker, :perform, [%{}]},
       overlap: false
     ]
   ],

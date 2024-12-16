@@ -10,18 +10,20 @@ defmodule Kkalb.Application do
     # when debug is set, all oban logs will be written to the default logger as debug logs.
     # _ = Oban.Telemetry.attach_default_logger(level: :debug)
 
-    children = [
-      # Start the PubSub system
-      {Phoenix.PubSub, name: Kkalb.PubSub},
-      # Start Finch
-      {Finch, name: Kkalb.Finch},
-      # Start the Endpoint (http/https)
-      KkalbWeb.Endpoint,
-      Kkalb.Repo,
-      # {Oban, Application.fetch_env!(:kkalb, Oban)},
-      Kkalb.Scheduler,
-      Kkalb.EtsIssuesGenServer
-    ]
+    repo = if Mix.env() == :dev, do: [Kkalb.Repo], else: []
+
+    children =
+      [
+        # Start the PubSub system
+        {Phoenix.PubSub, name: Kkalb.PubSub},
+        # Start Finch
+        {Finch, name: Kkalb.Finch},
+        # Start the Endpoint (http/https)
+        KkalbWeb.Endpoint,
+        # {Oban, Application.fetch_env!(:kkalb, Oban)},
+        Kkalb.Scheduler,
+        Kkalb.EtsIssuesGenServer
+      ] ++ repo
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
