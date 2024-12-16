@@ -10,7 +10,7 @@ defmodule Kkalb.Application do
     # when debug is set, all oban logs will be written to the default logger as debug logs.
     # _ = Oban.Telemetry.attach_default_logger(level: :debug)
 
-    repo = if Mix.env() == :dev, do: [Kkalb.Repo], else: []
+    repo = if Mix.env() == :prod, do: [], else: [Kkalb.Repo]
 
     children =
       [
