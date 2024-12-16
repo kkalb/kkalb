@@ -24,10 +24,13 @@ jobs:
     # Additional services can be defined here if required.
     services:
       db:
-        image: postgres:16
+        image: postgres
         ports: ['5432:5432']
         env:
           POSTGRES_PASSWORD: postgres
+          POSTGRES_HOST: postgres
+          POSTGRES_PORT: 5432
+          POSTGRES_DB: "kkalb_repo_test"
         options: >-
           --health-cmd pg_isready
           --health-interval 10s
@@ -109,6 +112,10 @@ jobs:
     # Customize this step as desired.
     - name: Check Formatting
       run: mix format --check-formatted
+
+    # Step: Drop, create and migrate the db
+    - name: Setup database
+    - run: mix ecto.reset
 
     # Step: Execute the tests.
     - name: Run tests
