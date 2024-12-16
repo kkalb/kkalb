@@ -4,9 +4,11 @@ defmodule KkalbWeb.Live.TransformerTest do
   alias Kkalb.Issues
   alias KkalbWeb.Live.GithubIssueVis.Transformer
 
+  @issue_storage Kkalb.Issues
+
   test "transformer transforms properly" do
     nv_start_time = ~N[2024-05-01 00:00:00.000000]
-    chart_data = nv_start_time |> Issues.list_issues() |> Transformer.convert(nv_start_time)
+    chart_data = nv_start_time |> Issues.list_issues() |> Transformer.convert(nv_start_time, @issue_storage)
 
     expected_labels = [
       ~D[2024-05-01],
