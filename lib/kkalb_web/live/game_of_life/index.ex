@@ -251,17 +251,17 @@ defmodule KkalbWeb.Live.GameOfLife.Index do
   #   """
   # end
 
-  defp cell(%{cell: @dead} = assigns) do
-    ~H"""
-    <div class="bg-cgray w-full h-full"></div>
-    """
-  end
+  # defp cell(%{cell: @dead} = assigns) do
+  #   ~H"""
+  #   <div class="bg-cgray w-full h-full"></div>
+  #   """
+  # end
 
-  defp cell(%{cell: @alive} = assigns) do
-    ~H"""
-    <div class="bg-corange w-full h-full"></div>
-    """
-  end
+  # defp cell(%{cell: @alive} = assigns) do
+  #   ~H"""
+  #   <div class="bg-corange w-full h-full"></div>
+  #   """
+  # end
 
   defp slider(assigns) do
     ~H"""
