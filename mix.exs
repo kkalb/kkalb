@@ -38,7 +38,7 @@ defmodule Kkalb.MixProject do
   defp deps do
     [
       {:phoenix, "~> 1.7.7"},
-      {:phoenix_html, "~> 3.3"},
+      {:phoenix_html, "~> 4.2"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:phoenix_live_view, "~> 1.0.1"},
       {:floki, ">= 0.30.0", only: :test},
