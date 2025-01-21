@@ -49,21 +49,22 @@ config :kkalb, KkalbWeb.Endpoint,
   pubsub_server: Kkalb.PubSub,
   live_view: [signing_salt: "ni1y7ANM"]
 
+config :kkalb, KkalbWeb.Gettext, default_locale: "en"
+config :kkalb, :github, api_key: ""
+
+# pick what module is used to store issue data from github.
+# Either 'Kkalb.IssuesEts' for ETS or 'Kkalb.Issues' for PostgreSQL DB
 # config :kkalb, Oban,
 #   engine: Oban.Engines.Basic,
 #   queues: [github_fetcher_queue: 10],
+config :kkalb, :issue_storage, Kkalb.IssuesEts
+
+# Configures the endpoint
 #   repo: Kkalb.Repo,
 #   plugins: [
 #     {Oban.Plugins.Pruner, max_age: 60 * 60 * 24 * 7}
 #   ]
 
-config :kkalb, :github, api_key: ""
-
-# pick what module is used to store issue data from github.
-# Either 'Kkalb.IssuesEts' for ETS or 'Kkalb.Issues' for PostgreSQL DB
-config :kkalb, :issue_storage, Kkalb.IssuesEts
-
-# Configures the endpoint
 config :kkalb, ecto_repos: [Kkalb.Repo]
 
 # Configures Elixir's Logger
