@@ -8,6 +8,7 @@ defmodule Kkalb.MixProject do
       elixir: "~> 1.16",
       elixirc_paths: elixirc_paths(Mix.env()),
       start_permanent: Mix.env() == :prod,
+      test_coverage: [tool: ExCoveralls],
       aliases: aliases(),
       deps: deps(),
       preferred_cli_env: preferred_cli_env(),
@@ -56,12 +57,20 @@ defmodule Kkalb.MixProject do
       {:postgrex, ">= 0.0.0"},
       {:oban, "~> 2.17"},
       {:styler, "~> 1.3.3", only: [:dev, :test], runtime: false},
-      {:quantum, "~> 3.0"}
+      {:quantum, "~> 3.0"},
+      {:excoveralls, "~> 0.18", only: :test}
     ]
   end
 
   defp preferred_cli_env do
-    ["ecto.reset": :test]
+    [
+      "ecto.reset": :test,
+      coveralls: :test,
+      "coveralls.detail": :test,
+      "coveralls.post": :test,
+      "coveralls.html": :test,
+      "coveralls.cobertura": :test
+    ]
   end
 
   # do not apply seeds on dev right now
