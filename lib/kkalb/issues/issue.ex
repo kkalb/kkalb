@@ -22,5 +22,6 @@ defmodule Kkalb.Issues.Issue do
     issue
     |> cast(attrs, [:id, :number, :gh_created_at, :gh_updated_at, :gh_closed_at])
     |> validate_required([:id, :number, :gh_created_at])
+    |> validate_number(:number, greater_than_or_equal_to: 0)
   end
 end

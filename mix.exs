@@ -58,7 +58,8 @@ defmodule Kkalb.MixProject do
       {:oban, "~> 2.17"},
       {:styler, "~> 1.3.3", only: [:dev, :test], runtime: false},
       {:quantum, "~> 3.0"},
-      {:excoveralls, "~> 0.18", only: :test}
+      {:excoveralls, "~> 0.18", only: :test},
+      {:stream_data, "~> 1.0", only: [:test, :dev]}
     ]
   end
 
