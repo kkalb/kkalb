@@ -2,8 +2,8 @@ defmodule KkalbWeb.Live.GithubIssueVis.Transformer do
   @moduledoc """
   Converts `Issue` structs to chart data.
   """
+  alias Kkalb.GithubIssueVis.ChartData
   alias Kkalb.Issues.Issue
-  alias KkalbWeb.Live.GithubIssueVis.ChartData
 
   # @issue_storage Application.compile_env(:kkalb, :issue_storage)
 

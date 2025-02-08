@@ -1,7 +1,7 @@
-defmodule KkalbWeb.GithubIssueVis.ChartDataTest do
+defmodule Kkalb.GithubIssueVis.ChartDataTest do
   use ExUnit.Case, async: true
 
-  alias KkalbWeb.Live.GithubIssueVis.ChartData
+  alias Kkalb.GithubIssueVis.ChartData
 
   test "builds default chart data properly" do
     assert %ChartData{

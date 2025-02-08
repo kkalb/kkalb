@@ -4,8 +4,8 @@ defmodule KkalbWeb.Live.GithubIssueVis.Index do
   """
   use KkalbWeb, :live_view
 
+  alias Kkalb.GithubIssueVis.ChartData
   alias KkalbWeb.Live.Chart
-  alias KkalbWeb.Live.GithubIssueVis.ChartData
   alias KkalbWeb.Live.GithubIssueVis.Transformer
 
   require Logger

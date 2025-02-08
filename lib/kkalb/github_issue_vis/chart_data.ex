@@ -1,4 +1,4 @@
-defmodule KkalbWeb.Live.GithubIssueVis.ChartData do
+defmodule Kkalb.GithubIssueVis.ChartData do
   @moduledoc false
   defstruct chart_headings: %{headings: ["Pulling data..."]},
             chart_labels: %{labels: [""]},
