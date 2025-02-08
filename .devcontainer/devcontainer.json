@@ -14,7 +14,8 @@
 				"bradlc.vscode-tailwindcss",
 				"dbaeumer.vscode-eslint",
 				"cweijan.vscode-postgresql-client2",
-				"george-alisson.html-preview-vscode"
+				"george-alisson.html-preview-vscode",
+				"github.vscode-github-actions"
 			]
 		}
 	},
