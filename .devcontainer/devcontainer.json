@@ -13,7 +13,8 @@
 				"ms-azuretools.vscode-docker",
 				"bradlc.vscode-tailwindcss",
 				"dbaeumer.vscode-eslint",
-				"cweijan.vscode-postgresql-client2"
+				"cweijan.vscode-postgresql-client2",
+				"tht13.html-preview-vscode"
 			]
 		}
 	},
