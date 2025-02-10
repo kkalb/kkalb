@@ -4,12 +4,15 @@ defmodule KkalbWeb.Live.GameOfLife.Index do
   """
   use KkalbWeb, :live_view
 
+  import KkalbWeb.Live.GameOfLife.CheckCell
+
   @dead 0
   @alive 1
 
+  define_check_cell()
+
   @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
-    # size is 720 / 10
     size = 25
 
     {:ok,
@@ -158,12 +161,6 @@ defmodule KkalbWeb.Live.GameOfLife.Index do
 
     new_val
   end
-
-  defp check_cell(neighbours, _) when neighbours < 2, do: @dead
-  defp check_cell(neighbours, @alive) when neighbours >= 2 and neighbours <= 3, do: @alive
-  defp check_cell(neighbours, @alive) when neighbours >= 3, do: @dead
-  defp check_cell(3, @dead), do: @alive
-  defp check_cell(_, cell), do: cell
 
   @impl Phoenix.LiveView
   def render(assigns) do
