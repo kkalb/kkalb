@@ -1,23 +1,9 @@
 defmodule Kkalb.Issues.IssueTest do
-  use ExUnit.Case, async: true
+  use KkalbWeb.ConnCase, async: true
 
   import Ecto.Changeset
 
   alias Kkalb.Issues.Issue
-
-  def errors_on(changeset) do
-    Ecto.Changeset.traverse_errors(changeset, fn {message, opts} ->
-      Enum.reduce(opts, message, fn {key, value}, acc ->
-        value =
-          case value do
-            [value | _] -> value
-            _ -> value
-          end
-
-        String.replace(acc, "%{#{key}}", to_string(value))
-      end)
-    end)
-  end
 
   defp issue_struct do
     %Issue{

@@ -24,9 +24,11 @@ defmodule KkalbWeb.ConnCase do
       use KkalbWeb, :verified_routes
 
       import KkalbWeb.ConnCase
+      import KkalbWeb.ErrorsOn
       import Phoenix.ConnTest
       import Phoenix.LiveViewTest
       import Plug.Conn
+
       # The default endpoint for testing
       @endpoint KkalbWeb.Endpoint
 

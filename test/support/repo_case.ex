@@ -9,6 +9,7 @@ defmodule Kkalb.RepoCase do
       import Ecto
       import Ecto.Query
       import Kkalb.RepoCase
+      import KkalbWeb.ErrorsOn
 
       alias Kkalb.Repo
     end
