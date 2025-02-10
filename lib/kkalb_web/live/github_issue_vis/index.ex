@@ -13,20 +13,19 @@ defmodule KkalbWeb.Live.GithubIssueVis.Index do
   @db_module Kkalb.Issues
   @ets_module Kkalb.IssuesEts
 
-  @issue_storage Application.compile_env(:kkalb, :issue_storage)
-
   @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
     start_date = NaiveDateTime.new!(Date.new!(2024, 1, 1), Time.new!(0, 0, 0))
     # Used module is set in config file. In prod, we use ets to save money on the DB. On dev, DB is used.
-    use_db? = @issue_storage == @db_module
+    issue_storage = Application.get_env(:kkalb, :issue_storage)
+    use_db? = issue_storage == @db_module
 
     {chart_data, loading} =
       if connected?(socket) do
         chart_data =
           start_date
           |> get_storage_module(use_db?).list_issues()
-          |> Transformer.convert(start_date, @issue_storage)
+          |> Transformer.convert(start_date, issue_storage)
 
         {chart_data, false}
       else
@@ -39,7 +38,7 @@ defmodule KkalbWeb.Live.GithubIssueVis.Index do
      |> assign(start_date: start_date)
      |> assign(loading: loading)
      |> assign(use_db?: use_db?)
-     |> assign(issue_storage: @issue_storage)}
+     |> assign(issue_storage: issue_storage)}
   end
 
   defp get_storage_module(true), do: @db_module
