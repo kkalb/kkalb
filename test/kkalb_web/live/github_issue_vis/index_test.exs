@@ -1,8 +1,11 @@
 defmodule KkalbWeb.GithubIssueVis.IndexTest do
-  use KkalbWeb.ConnCase, async: false
+  use KkalbWeb.FeatureCase, async: false
 
-  test "renders canvas", %{conn: conn} do
-    {:ok, _view, _html} = live(conn, "/live")
-    # open_browser(view)
+  feature "User visits the homepage", %{session: session} do
+    IO.inspect(session)
+
+    session
+    |> visit("/")
+    |> assert_text("Welcome to Phoenix!")
   end
 end

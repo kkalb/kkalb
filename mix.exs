@@ -59,7 +59,9 @@ defmodule Kkalb.MixProject do
       {:styler, "~> 1.3.3", only: [:dev, :test], runtime: false},
       {:quantum, "~> 3.0"},
       {:excoveralls, "~> 0.18", only: :test},
-      {:stream_data, "~> 1.0", only: [:test, :dev]}
+      {:stream_data, "~> 1.0", only: [:test, :dev]},
+      {:wallaby, "~> 0.30.0", only: :test},
+      {:phoenix_ecto, "~> 4.0", only: :test}
     ]
   end
 
@@ -96,7 +98,11 @@ defmodule Kkalb.MixProject do
         "cmd cp -r assets/images priv/static/images",
         "cmd cp -r assets/js/particles.json priv/static/assets"
       ],
-      ps: ["copy.static.assets", "phx.server"]
+      ps: ["copy.static.assets", "phx.server"],
+      test: [
+        "esbuild default",
+        "test"
+      ]
     ]
   end
 end

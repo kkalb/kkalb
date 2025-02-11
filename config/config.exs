@@ -58,18 +58,16 @@ config :kkalb, :github, api_key: ""
 #   engine: Oban.Engines.Basic,
 #   queues: [github_fetcher_queue: 10],
 config :kkalb, :issue_storage, Kkalb.IssuesEts
-
-# Configures the endpoint
-#   repo: Kkalb.Repo,
-#   plugins: [
-#     {Oban.Plugins.Pruner, max_age: 60 * 60 * 24 * 7}
-#   ]
-
 config :kkalb, ecto_repos: [Kkalb.Repo]
 
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
+  # Configures the endpoint
+  #   repo: Kkalb.Repo,
+  #   plugins: [
+  #     {Oban.Plugins.Pruner, max_age: 60 * 60 * 24 * 7}
+  #   ]
   metadata: [:request_id],
   level: :debug
 

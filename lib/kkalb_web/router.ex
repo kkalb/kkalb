@@ -23,4 +23,7 @@ defmodule KkalbWeb.Router do
 
     get "/download_portfolio", DownloadController, :download_portfolio
   end
+
+  live_session :default, on_mount: Kkalb.Hooks.AllowEctoSandbox do
+  end
 end

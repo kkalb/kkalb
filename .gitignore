@@ -46,3 +46,6 @@ npm-debug.log
 rel/overlays/bin/
 
 .env
+
+chromedriver_linux64.zip
+LICENSE.chromedriver

@@ -22,7 +22,8 @@
 	"forwardPorts": [
 		4000,
 		4001,
-		5432
+		5432,
+		9222
 	],
 	"postCreateCommand": "",
 	"remoteUser": "vscode",
