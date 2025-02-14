@@ -17,26 +17,49 @@ ARG USER_GID=$USER_UID
 RUN apt-get update \
     && apt-get -y install --no-install-recommends apt-utils dialog 2>&1 \
     && apt-get -y install inotify-tools \
-    && apt-get -y install --no-install-recommends postgresql-client \
-    #
-    # Install bash tree
-    && apt-get -y install --no-install-recommends tree \
-    # Install git iproute2, procps, lsb-release (useful for CLI installs)
-    && apt-get -y install --no-install-recommends git iproute2 procps iproute2 lsb-release ca-certificates \
-    # install npm
-    && apt-get -y install nodejs npm \
-    # install postgres
-    && apt-get -y install postgresql postgresql-contrib \
+    && apt-get -y install --no-install-recommends postgresql-client
+
+# Install bash tree
+RUN apt-get -y install --no-install-recommends tree 
+
+# Install git iproute2, procps, lsb-release (useful for CLI installs)
+RUN apt-get -y install --no-install-recommends git iproute2 procps iproute2 lsb-release ca-certificates 
+
+# install npm
+RUN apt-get -y install nodejs npm 
+
+# install postgres
+RUN apt-get -y install postgresql postgresql-contrib \
     # Create a non-root user to use if preferred - see https://aka.ms/vscode-remote/containers/non-root-user.
     && groupadd --gid $USER_GID $USERNAME \
     && useradd -s /bin/bash --uid $USER_UID --gid $USER_GID -m $USERNAME \
     # [Optional] Add sudo support for the non-root user
     && apt-get install -y sudo \
     && echo $USERNAME ALL=\(root\) NOPASSWD:ALL > /etc/sudoers.d/$USERNAME \
-    && chmod 0440 /etc/sudoers.d/$USERNAME \
-    #
-    # Clean up
-    && apt-get autoremove -y \
+    && chmod 0440 /etc/sudoers.d/$USERNAME 
+
+RUN apt-get update -qq -y && \
+    apt-get install -y \
+    libasound2 \
+    libatk-bridge2.0-0 \
+    libgtk-4-1 \
+    libnss3 \
+    xdg-utils \
+    wget && \
+    wget -q -O chrome-linux64.zip https://bit.ly/chrome-linux64-121-0-6167-85 && \
+    unzip chrome-linux64.zip && \
+    rm chrome-linux64.zip && \
+    mv chrome-linux64 /opt/chrome/ && \
+    ln -s /opt/chrome/chrome /usr/local/bin/ && \
+    wget -q -O chromedriver-linux64.zip https://bit.ly/chromedriver-linux64-121-0-6167-85 && \
+    unzip -j chromedriver-linux64.zip chromedriver-linux64/chromedriver && \
+    rm chromedriver-linux64.zip && \
+    mv chromedriver /usr/local/bin/
+
+ENV PATH="/opt/chrome:${PATH}"
+
+# Clean up
+RUN apt-get autoremove -y \
     && apt-get clean -y \
     && rm -rf /var/lib/apt/lists/*
 
