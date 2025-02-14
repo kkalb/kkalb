@@ -24,4 +24,5 @@ config :logger, level: :warning
 # Initialize plugs at runtime for faster test compilation
 config :phoenix, :plug_init_mode, :runtime
 
+config :wallaby, :chromedriver, binary: "/usr/local/bin/chromedriver"
 config :wallaby, otp_app: :kkalb, driver: Wallaby.Chrome
