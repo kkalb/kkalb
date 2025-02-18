@@ -3,6 +3,8 @@ defmodule Kkalb.Hooks.AllowEctoSandbox do
   import Phoenix.Component
   import Phoenix.LiveView
 
+  alias Phoenix.Ecto.SQL.Sandbox
+
   def on_mount(:default, _params, _session, socket) do
     allow_ecto_sandbox(socket)
     {:cont, socket}
@@ -14,6 +16,6 @@ defmodule Kkalb.Hooks.AllowEctoSandbox do
         if connected?(socket), do: get_connect_info(socket, :user_agent)
       end)
 
-    Phoenix.Ecto.SQL.Sandbox.allow(metadata, Application.get_env(:kkalb, :sandbox))
+    Sandbox.allow(metadata, Application.get_env(:kkalb, :sandbox))
   end
 end
