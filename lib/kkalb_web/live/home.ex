@@ -81,24 +81,6 @@ defmodule KkalbWeb.Live.Home do
     {:noreply, assign(socket, focus: String.to_integer(id))}
   end
 
-  @impl Phoenix.LiveView
-  def render(assigns) do
-    ~H"""
-    <div class="h-full w-full">
-      <.header text="Portfolio - WIP"></.header>
-      <.button type="button" phx-click="download_portfolio" class="absolute top-2 right-1 sm:right-8">
-        <span>Download Portfolio</span>
-      </.button>
-
-      <.right_row :for={ele <- @journey} title={ele.title} date={ele.date} id={ele.id} focus={@focus}>
-        {ele.text}
-      </.right_row>
-
-      <.footer />
-    </div>
-    """
-  end
-
   attr :title, :string, required: true
   attr :date, :string, required: true
   attr :id, :integer, required: true
