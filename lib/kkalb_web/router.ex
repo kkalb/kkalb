@@ -18,7 +18,7 @@ defmodule KkalbWeb.Router do
     pipe_through :browser
     live("/", Live.Home)
 
-    live("/live", Live.GithubIssueVis.Index)
+    live("/issues", Live.GithubIssueVis.Index)
     live("/gameoflife", Live.GameOfLife.Index)
 
     get "/download_portfolio", DownloadController, :download_portfolio

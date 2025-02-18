@@ -697,7 +697,7 @@ defmodule KkalbWeb.CoreComponents do
     ~H"""
     <div class="fixed flex flex-row md:flex-col md:h-screen w-full h-20 md:w-20 bottom-0 md:top-0 bg-cgray text-white shadow-lg shadow-cgray">
       <.sidebar_icon icon="hero-home-solid" href="/" tooltip="Home" />
-      <.sidebar_icon icon="hero-chart-bar-solid" href="/live" tooltip="Github Vis" />
+      <.sidebar_icon icon="hero-chart-bar-solid" href="/issues" tooltip="Github Vis" />
       <.sidebar_icon icon="hero-puzzle-piece-solid" href="/gameoflife" tooltip="Game of Life" />
     </div>
     """
