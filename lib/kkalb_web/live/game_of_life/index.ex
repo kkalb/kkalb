@@ -4,12 +4,9 @@ defmodule KkalbWeb.Live.GameOfLife.Index do
   """
   use KkalbWeb, :live_view
 
-  import KkalbWeb.Live.GameOfLife.CheckCell
+  import KkalbWeb.Live.GameOfLife.Components
 
-  @dead 0
-  @alive 1
-
-  define_check_cell()
+  alias KkalbWeb.Live.GameOfLife.GameLogic
 
   @impl Phoenix.LiveView
   def mount(_params, _session, socket) do
@@ -17,30 +14,29 @@ defmodule KkalbWeb.Live.GameOfLife.Index do
 
     {:ok,
      socket
-     |> assign(cells: build_empty_cells(size))
+     |> assign(cells: GameLogic.build_empty_cells(size))
      |> assign(size: size)
      |> assign(timer_ref: nil)
      |> assign(timer_speed: "500")}
   end
 
   @impl Phoenix.LiveView
-  def handle_info(:tick, socket) do
-    {:noreply, do_game_cycle(socket)}
+  def handle_info(:tick, %{assigns: %{cells: cells, size: size}} = socket) do
+    new_cells = GameLogic.do_game_cycle(cells, size)
+    {:noreply, update_canvas_and_socket(socket, new_cells)}
   end
 
   @impl Phoenix.LiveView
   def handle_event("spawn_glider", _, socket) do
     glider_cells =
       socket.assigns.cells
-      |> revive(3, 3)
-      |> revive(4, 4)
-      |> revive(5, 4)
-      |> revive(5, 3)
-      |> revive(5, 2)
+      |> GameLogic.revive(3, 3)
+      |> GameLogic.revive(4, 4)
+      |> GameLogic.revive(5, 4)
+      |> GameLogic.revive(5, 3)
+      |> GameLogic.revive(5, 2)
 
-    socket = push_event(socket, "spawn", glider_cells)
-
-    {:noreply, assign(socket, cells: glider_cells)}
+    {:noreply, update_canvas_and_socket(socket, glider_cells)}
   end
 
   @impl Phoenix.LiveView
@@ -50,12 +46,10 @@ defmodule KkalbWeb.Live.GameOfLife.Index do
 
     new_cells =
       Enum.reduce(default_range, socket.assigns.cells, fn _, cells ->
-        revive(cells, Enum.random(default_range), Enum.random(default_range))
+        GameLogic.revive(cells, Enum.random(default_range), Enum.random(default_range))
       end)
 
-    socket = push_event(socket, "spawn", new_cells)
-
-    {:noreply, assign(socket, cells: new_cells)}
+    {:noreply, update_canvas_and_socket(socket, new_cells)}
   end
 
   def handle_event("start_timer", _, socket) do
@@ -80,6 +74,12 @@ defmodule KkalbWeb.Live.GameOfLife.Index do
     {:noreply, assign(socket, timer_ref: timer_ref, timer_speed: timer_speed)}
   end
 
+  defp update_canvas_and_socket(socket, new_cells) do
+    socket
+    |> push_event("spawn", new_cells)
+    |> assign(cells: new_cells)
+  end
+
   # `min` is 100 ms and `max` is 1000 ms.
   # Since a lower interval is faster and we want to show a "Speed" label,
   # we have to map 100 to 1000 and vice versa.
@@ -89,192 +89,11 @@ defmodule KkalbWeb.Live.GameOfLife.Index do
     ref
   end
 
-  defp stop_timer(nil) do
-    IO.puts("Timer already stopped")
-    nil
-  end
+  # when timer already stopped
+  defp stop_timer(nil), do: nil
 
   defp stop_timer(timer_ref) do
     {:ok, :cancel} = :timer.cancel(timer_ref)
     nil
-  end
-
-  defp build_empty_cells(size) do
-    one_dim = Range.new(0, size - 1)
-    one_dim = Enum.to_list(one_dim)
-    for row <- one_dim, into: %{}, do: {row, build_row(one_dim)}
-  end
-
-  defp build_row(row) do
-    for y <- row, into: %{}, do: {y, @dead}
-  end
-
-  defp do_game_cycle(%{assigns: %{cells: cells, size: size}} = socket) do
-    new_cells = may_revive(cells, size)
-
-    socket = push_event(socket, "spawn", new_cells)
-
-    assign(socket, cells: new_cells)
-  end
-
-  defp may_revive(cells, size) do
-    for {row_idx, row_data} <- cells, into: %{} do
-      row =
-        for {col_idx, cell} <- row_data, into: %{} do
-          {col_idx, check_neighbours(cells, cell, row_idx, col_idx, size)}
-        end
-
-      {row_idx, row}
-    end
-  end
-
-  defp revive(cells, x, y) do
-    update_in(cells, [x, y], fn _ -> @alive end)
-  end
-
-  @pot_neighbours [{-1, -1}, {-1, 0}, {-1, 1}, {0, -1}, {0, 1}, {1, -1}, {1, 0}, {1, 1}]
-  defp check_neighbours(cells, cell, row, col, size) do
-    two_d_metrics =
-      for {x_off, y_off} <- @pot_neighbours do
-        new_row = row - x_off
-        new_col = col - y_off
-
-        new_row =
-          cond do
-            new_row == size -> 0
-            new_row == -1 -> size - 1
-            true -> new_row
-          end
-
-        new_col =
-          cond do
-            new_col == size -> 0
-            new_col == -1 -> size - 1
-            true -> new_col
-          end
-
-        get_in(cells, [new_row, new_col])
-      end
-
-    neighbours = two_d_metrics |> Enum.filter(fn m -> m == @alive end) |> length()
-    new_val = check_cell(neighbours, cell)
-
-    new_val
-  end
-
-  @impl Phoenix.LiveView
-  def render(assigns) do
-    ~H"""
-    <div class="h-full">
-      <.header text="Game of Life">
-        Conway's Game of Life is one of the most fascinating things to watch on an computer.
-      </.header>
-
-      <div class="flex flex-col justify-center items-center gap-y-2">
-        <.buttons timer_ref={@timer_ref} />
-
-        <div class="flex w-full items-center h-full">
-          <div class="flex justify-center w-full h-full">
-            <.grid cells={@cells} />
-
-            <.slider timer_speed={@timer_speed} />
-          </div>
-        </div>
-      </div>
-      <.footer />
-    </div>
-    """
-  end
-
-  defp buttons(assigns) do
-    ~H"""
-    <div class="flex flex-row justify-center md:gap-4 gap-2 w-1/2 h-full">
-      <.button phx-click="spawn_random">
-        Spawn cells
-      </.button>
-      <.button phx-click="spawn_glider">
-        Spawn glider
-      </.button>
-      <.button phx-click="start_timer" disabled={not is_nil(@timer_ref)}>
-        <.icon name="hero-play" class="w-6 h-6" />
-      </.button>
-      <.button phx-click="stop_timer" disabled={is_nil(@timer_ref)}>
-        <.icon name="hero-pause" class="w-6 h-6" />
-      </.button>
-    </div>
-    """
-  end
-
-  defp cells_to_grid(cells) do
-    cells
-    |> Enum.map(fn {x, row} ->
-      {x, Enum.sort_by(row, fn {y, _cell} -> y end, :asc)}
-    end)
-    |> Enum.sort_by(fn {x, _row} -> x end, :asc)
-  end
-
-  # building the grid ourselfes with only divs scales better than 'display: grid'
-  defp grid(assigns) do
-    cells = cells_to_grid(assigns.cells)
-    assigns = assign(assigns, cells: cells)
-
-    ~H"""
-    <div class="mt-2" id="big_canvas_div">
-      <canvas
-        class="sm:w-[500px] sm:h-[500px] w-[250px] h-[250px] bg-cgray border-white border"
-        id="big_canvas"
-        width="250"
-        height="250"
-        gridColor="#EF8354"
-        phx-hook="Canvas"
-      >
-      </canvas>
-    </div>
-    """
-  end
-
-  # using 'display: grid' limits us on how to calculate how many grid cells we want to use
-  # defp real_grid(assigns) do
-  #   assigns = assign(assigns, cells: cells_to_grid(assigns.cells))
-
-  #   ~H"""
-  #   <grid class="grid grid-rows-40 grid-cols-40 h-full">
-  #     <%= for {x_idx, row_data} <- @cells, {y_idx, cell} <- row_data do %>
-  #       <div class="row-span-1 col-span-1 border w-4 h-4" id={"cell-#{x_idx}-#{y_idx}"}>
-  #         <.cell cell={cell} />
-  #       </div>
-  #     <% end %>
-  #   </grid>
-  #   """
-  # end
-
-  # defp cell(%{cell: @dead} = assigns) do
-  #   ~H"""
-  #   <div class="bg-cgray w-full h-full"></div>
-  #   """
-  # end
-
-  # defp cell(%{cell: @alive} = assigns) do
-  #   ~H"""
-  #   <div class="bg-corange w-full h-full"></div>
-  #   """
-  # end
-
-  defp slider(assigns) do
-    ~H"""
-    <.simple_form for={%{}} phx-change="change_speed" class="flex w-4 h-72">
-      <.input
-        type="range"
-        phx-debounce="250"
-        dir="vertical"
-        label="Speed"
-        name="speed"
-        value={@timer_speed}
-        min="100"
-        max="1000"
-        step="10"
-      />
-    </.simple_form>
-    """
   end
 end

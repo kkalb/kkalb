@@ -1,0 +1,19 @@
+<div class="h-full">
+  <.header text="Game of Life">
+    Conway's Game of Life is one of the most fascinating things to watch on an computer.
+  </.header>
+
+  <div class="flex flex-col justify-center items-center gap-y-2">
+    <.buttons timer_ref={@timer_ref} />
+
+    <div class="flex w-full items-center h-full">
+      <div class="flex justify-center w-full h-full">
+        <.grid cells={@cells} />
+
+        <.slider timer_speed={@timer_speed} />
+      </div>
+    </div>
+  </div>
+
+  <.footer />
+</div>
