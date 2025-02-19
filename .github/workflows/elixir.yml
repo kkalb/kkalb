@@ -54,6 +54,16 @@ jobs:
         otp-version: ${{matrix.otp}}
         elixir-version: ${{matrix.elixir}}
 
+    # Step: Install Chrome and ChromeDriver
+    - name: Set up Chrome and ChromeDriver
+      uses: nanasess/setup-chromedriver@master
+
+      # Step: Verify Chrome and ChromeDriver installation
+    - name: Verify Chrome and ChromeDriver
+      run: |
+        google-chrome --version
+        chromedriver --version
+
     # Step: Check out the code.
     - name: Checkout code
       uses: actions/checkout@v4
@@ -116,16 +126,6 @@ jobs:
 
     - name: Credo linting
       run: mix credo --strict
-
-      # Step: Install Chrome and ChromeDriver
-    - name: Set up Chrome and ChromeDriver
-      uses: nanasess/setup-chromedriver@master
-
-      # Step: Verify Chrome and ChromeDriver installation
-    - name: Verify Chrome and ChromeDriver
-      run: |
-        google-chrome --version
-        chromedriver --version
 
     # Step: Drop, create and migrate the db
     - name: Setup database
