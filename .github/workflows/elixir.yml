@@ -54,15 +54,15 @@ jobs:
         otp-version: ${{matrix.otp}}
         elixir-version: ${{matrix.elixir}}
 
-    # Step: Install Chrome and ChromeDriver
-    - name: Set up Chrome and ChromeDriver
-      uses: nanasess/setup-chromedriver@master
+    # # Step: Install Chrome and ChromeDriver
+    # - name: Set up Chrome and ChromeDriver
+    #   uses: nanasess/setup-chromedriver@master
 
-      # Step: Verify Chrome and ChromeDriver installation
-    - name: Verify Chrome and ChromeDriver
-      run: |
-        google-chrome --version
-        chromedriver --version
+    #   # Step: Verify Chrome and ChromeDriver installation
+    # - name: Verify Chrome and ChromeDriver
+    #   run: |
+    #     google-chrome --version
+    #     chromedriver --version
 
     # Step: Check out the code.
     - name: Checkout code
