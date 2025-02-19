@@ -70,6 +70,13 @@ jobs:
         restore-keys: |
           ${{ runner.os }}-mix-${{ env.cache-name }}-
 
+    - name: Install chrome and chromedriver
+      uses: nanasess/setup-chromedriver@v2
+    - run: |
+        export DISPLAY=:99
+        chromedriver --url-base=/wd/hub &
+        sudo Xvfb -ac :99 -screen 0 1280x1024x24 > /dev/null 2>&1 & # optional
+
     # Step: Define how to cache the `_build` directory. After the first run,
     # this speeds up tests runs a lot. This includes not re-compiling our
     # project's downloaded deps every run.
