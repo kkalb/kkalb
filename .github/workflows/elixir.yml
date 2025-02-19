@@ -119,10 +119,7 @@ jobs:
 
       # Step: Install Chrome and ChromeDriver
     - name: Set up Chrome and ChromeDriver
-      uses: browser-actions/setup-chrome@v1
-      with:
-        install-dependencies: true
-        install-chromedriver: true
+      uses: nanasess/setup-chromedriver@master
 
       # Step: Verify Chrome and ChromeDriver installation
     - name: Verify Chrome and ChromeDriver
