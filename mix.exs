@@ -56,7 +56,7 @@ defmodule Kkalb.MixProject do
       {:typed_ecto_schema, "~> 0.4.1", runtime: false},
       {:postgrex, ">= 0.0.0"},
       {:oban, "~> 2.17"},
-      {:styler, "~> 1.3.3", only: [:dev, :test], runtime: false},
+      {:styler, "~> 1.4.0", only: [:dev, :test], runtime: false},
       {:quantum, "~> 3.0"},
       {:excoveralls, "~> 0.18", only: :test},
       {:stream_data, "~> 1.0", only: [:test, :dev]},
