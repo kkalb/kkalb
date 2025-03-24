@@ -5,12 +5,14 @@ defmodule Kkalb.Application do
 
   use Application
 
+  @env Mix.env()
+
   @impl true
   def start(_type, _args) do
     # when debug is set, all oban logs will be written to the default logger as debug logs.
     # _ = Oban.Telemetry.attach_default_logger(level: :debug)
 
-    repo = if Mix.env() == :prod, do: [], else: [Kkalb.Repo]
+    repo = if @env == :prod, do: [], else: [Kkalb.Repo]
 
     children =
       [
