@@ -699,6 +699,7 @@ defmodule KkalbWeb.CoreComponents do
       <.sidebar_icon icon="hero-home-solid" href="/" tooltip="Home" />
       <.sidebar_icon icon="hero-chart-bar-solid" href="/issues" tooltip="Github Vis" />
       <.sidebar_icon icon="hero-puzzle-piece-solid" href="/gameoflife" tooltip="Game of Life" />
+      <.sidebar_icon icon="hero-code-bracket-square" href="/bike" tooltip="Bike" />
     </div>
     """
   end

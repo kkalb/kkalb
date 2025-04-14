@@ -8,6 +8,7 @@ defmodule KkalbWeb.Router do
     plug :put_root_layout, html: {KkalbWeb.Layouts, :root}
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :fetch_cookies
   end
 
   pipeline :api do
@@ -20,8 +21,10 @@ defmodule KkalbWeb.Router do
 
     live("/issues", Live.GithubIssueVis.Index)
     live("/gameoflife", Live.GameOfLife.Index)
+    live("/bike", Live.Bike.Index)
 
     get "/download_portfolio", DownloadController, :download_portfolio
+    get "/set_user_cookie/:user_id", UserCookieController, :set
   end
 
   live_session :default, on_mount: Kkalb.Hooks.AllowEctoSandbox do
