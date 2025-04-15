@@ -1,9 +1,14 @@
 <div class="h-full">
+  <.flash_group flash={@flash} />
   <.header text="Bike">
     A simple game of guessing a random generated number with highscore tracking per user.
+    <%!-- If user id found in session --%>
     <%= if @bike_user do %>
       <br /><br />
       You are now logged in as {@bike_user.name} with highscore {@bike_user.highscore}
+      <.button type="button" phx-click="logout" class="bg-blue-600 text-white">
+        Logout
+      </.button>
     <% end %>
   </.header>
 
@@ -12,7 +17,7 @@
       <.input field={form[:name]} label="Name" />
 
       <.button phx-disable-with="Saving..." class="bg-blue-600 text-white">
-        Save
+        Login
       </.button>
     </.form>
   </div>
@@ -20,13 +25,13 @@
   <div :if={@bike_user} class="flex flex-col justify-center items-center gap-y-2">
     <.form :let={_form} for={%{}} phx-submit="save" class="w-full max-w-md space-y-4">
       <.input label="Number" id="guessed_number" type="number" name="guessed_number" value={0} />
-      <%= if @indicator != "a match" do %>
+      <%= if @indicator != :match do %>
         <.button phx-disable-with="Saving..." class="bg-blue-600 text-white">
           Guess
         </.button>
       <% else %>
         <.button
-          :if={@indicator == "a match"}
+          :if={@indicator == :match}
           type="button"
           phx-click="retry"
           class="bg-blue-600 text-white"
@@ -37,10 +42,14 @@
     </.form>
   </div>
 
-  <.header :if={@indicator} text="">
-    You guess was {@indicator}
-    <br /> Try #{@tries}
-  </.header>
+  <.render_result
+    indicator={@indicator}
+    tries={@tries}
+    bike_user={@bike_user}
+    old_highscore={@old_highscore}
+  />
+
+  <.render_table bike_users={@bike_users} />
 
   <.footer />
 </div>

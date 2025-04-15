@@ -25,6 +25,7 @@ defmodule KkalbWeb.Router do
 
     get "/download_portfolio", DownloadController, :download_portfolio
     get "/set_user_cookie/:user_id", UserCookieController, :set
+    get "/delete_user_cookie", UserCookieController, :delete
   end
 
   live_session :default, on_mount: Kkalb.Hooks.AllowEctoSandbox do
