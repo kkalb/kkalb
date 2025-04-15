@@ -9,6 +9,8 @@ Here's a quick overview of the current goals and potential enhancements.
 To start the server, run the following command:
 
 ```bash
+mix setup
+MIX_ENV=dev mix ecto.reset
 DISABLE_SCHEDULING=true mix bravo
 ```
 

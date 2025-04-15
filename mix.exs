@@ -84,19 +84,19 @@ defmodule Kkalb.MixProject do
   defp aliases do
     [
       "ecto.reset": ecto_reset(Mix.env()),
-      setup: ["deps.get", "assets.setup", "assets.build"],
+      setup: ["deps.get", "cmd npm install --prefix assets", "assets.setup", "assets.build", "copy.static.assets"],
       "assets.setup": ["tailwind.install --if-missing", "esbuild.install --if-missing"],
       "assets.build": ["tailwind default", "esbuild default"],
       "assets.deploy": [
         "tailwind default --minify",
         "esbuild default --minify",
-        "cmd cp -r assets/js/particles.json priv/static/assets",
+        "cmd cp -r assets/js/particles.json priv/static/assets/particles.json",
         "phx.digest"
       ],
       "copy.static.assets": [
         "cmd rm -rf priv/static/images",
         "cmd cp -r assets/images priv/static/images",
-        "cmd cp -r assets/js/particles.json priv/static/assets"
+        "cmd cp -r assets/js/particles.json priv/static/assets/particles.json"
       ],
       ps: ["copy.static.assets", "phx.server"],
       bravo: "ps",
