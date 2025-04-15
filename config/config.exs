@@ -50,6 +50,7 @@ config :kkalb, KkalbWeb.Endpoint,
   live_view: [signing_salt: "ni1y7ANM"]
 
 config :kkalb, KkalbWeb.Gettext, default_locale: "en"
+config :kkalb, :disable_scheduling, "false"
 config :kkalb, :github, api_key: ""
 
 # pick what module is used to store issue data from github.

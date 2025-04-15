@@ -20,6 +20,7 @@ if System.get_env("PHX_SERVER") do
   config :kkalb, KkalbWeb.Endpoint, server: true
 end
 
+config :kkalb, :disable_scheduling, System.get_env("DISABLE_SCHEDULING", "false")
 config :kkalb, :github, api_key: System.get_env("GITHUB_ACCESS_KEY", "")
 
 config :kkalb,

@@ -13,55 +13,45 @@ defmodule KkalbWeb.Live.Bike.Index do
 
   @impl Phoenix.LiveView
   def mount(_params, %{"bike_user_id" => bike_user_id}, socket) do
+    # takes bike_user_id out of cookies and loads the user from the DB
     bike_user = BikeUsers.get_bike_user(bike_user_id)
     {:ok, socket |> assign(bike_users: [], bike_user: bike_user) |> mount_assigns()}
   end
 
   def mount(_params, _session, socket) do
-    socket =
-      if connected?(socket) do
-        bike_users = BikeUsers.list_bike_users()
-        assign(socket, bike_users: bike_users, bike_user: nil)
-      else
-        assign(socket, bike_users: [], bike_user: nil)
-      end
-
-    {:ok, mount_assigns(socket)}
+    # regular mount w/o cookies
+    {:ok, socket |> assign(bike_user: nil) |> mount_assigns()}
   end
 
   defp mount_assigns(socket), do: assign(socket, random_number: :rand.uniform(@random_range), tries: 0, indicator: nil)
 
   @impl Phoenix.LiveView
   def handle_event("save", %{"name" => name}, socket) do
-    bike_user =
-      Enum.find(socket.assigns.bike_users, fn bike_user ->
-        bike_user.name == name
-      end)
+    socket =
+      case BikeUsers.get_bike_user_by_name(name) do
+        # bike_user does not exist
+        nil ->
+          changeset = BikeUser.changeset(%BikeUser{highscore: 0, name: name}, %{})
 
-    if bike_user do
-      # bike_user already exists
-      Logger.debug("Bike user #{bike_user.name} already exists")
+          case BikeUsers.create_bike_user(changeset) do
+            {:ok, bike_user} ->
+              Logger.info("Successfully created bike user #{bike_user.name}")
 
-      socket = assign(socket, bike_user: bike_user)
-      {:noreply, socket}
-    else
-      # bike_user does not exist
-      changeset = BikeUser.changeset(%BikeUser{highscore: 0, name: name}, %{})
+              socket |> assign(bike_user: bike_user) |> redirect(to: ~p"/set_user_cookie/#{bike_user.id}")
 
-      socket =
-        case BikeUsers.create_bike_user(changeset) do
-          {:ok, bike_user} ->
-            Logger.info("Successfully created bike user #{bike_user.name}")
+            {:error, changeset} ->
+              Logger.error(to_string(changeset.errors))
+              assign(socket, changeset: changeset)
+          end
 
-            socket |> assign(bike_user: bike_user) |> redirect(to: ~p"/set_user_cookie/#{bike_user.id}")
+        # bike_user already exists
+        bike_user ->
+          Logger.debug("Bike user #{bike_user.name} already exists")
 
-          {:error, msg} ->
-            Logger.error(to_string(msg))
-            socket
-        end
+          assign(socket, bike_user: bike_user)
+      end
 
-      {:noreply, socket}
-    end
+    {:noreply, socket}
   end
 
   def handle_event("save", %{"guessed_number" => guessed_number}, socket) do

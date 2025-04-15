@@ -10,9 +10,12 @@ defmodule Kkalb.Repo.Migrations.AddBikeUser do
 
       timestamps()
     end
+
+    create(unique_index(:bike_users, [:name]))
   end
 
   def down do
+    drop(index(:bike_users, [:name]))
     drop(table(:bike_users))
   end
 end

@@ -18,5 +18,6 @@ defmodule Kkalb.Bike.BikeUser do
     bike_user
     |> cast(attrs, [:highscore, :name])
     |> validate_required([:highscore, :name])
+    |> unique_constraint(:name)
   end
 end

@@ -13,6 +13,7 @@ defmodule Kkalb.Application do
     # _ = Oban.Telemetry.attach_default_logger(level: :debug)
 
     repo = if @env == :prod, do: [], else: [Kkalb.Repo]
+    disable_scheduling? = Application.get_env(:kkalb, :disable_scheduling)
 
     children =
       [
@@ -21,17 +22,18 @@ defmodule Kkalb.Application do
         # Start Finch
         {Finch, name: Kkalb.Finch},
         # Start the Endpoint (http/https)
-        KkalbWeb.Endpoint,
+        KkalbWeb.Endpoint
         # {Oban, Application.fetch_env!(:kkalb, Oban)},
-        Kkalb.Scheduler,
-        Kkalb.EtsIssuesGenServer
-      ] ++ repo
+      ] ++ repo ++ scheduling(disable_scheduling?)
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Kkalb.Supervisor]
     Supervisor.start_link(children, opts)
   end
+
+  defp scheduling("false"), do: [Kkalb.Scheduler, Kkalb.EtsIssuesGenServer]
+  defp scheduling("true"), do: []
 
   # Tell Phoenix to update the endpoint configuration
   # whenever the application is updated.

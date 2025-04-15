@@ -99,6 +99,7 @@ defmodule Kkalb.MixProject do
         "cmd cp -r assets/js/particles.json priv/static/assets"
       ],
       ps: ["copy.static.assets", "phx.server"],
+      bravo: "ps",
       test: [
         "esbuild default",
         "test"
