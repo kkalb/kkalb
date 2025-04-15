@@ -24,7 +24,13 @@
 
   <div :if={@bike_user} class="flex flex-col justify-center items-center gap-y-2">
     <.form :let={_form} for={%{}} phx-submit="save" class="w-full max-w-md space-y-4">
-      <.input label="Number" id="guessed_number" type="number" name="guessed_number" value={0} />
+      <.input
+        label={"The target number is between 1 and #{@max_random_number}"}
+        id="guessed_number"
+        type="number"
+        name="guessed_number"
+        value={0}
+      />
       <%= if @indicator != :match do %>
         <.button phx-disable-with="Saving..." class="bg-blue-600 text-white">
           Guess

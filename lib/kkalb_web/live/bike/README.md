@@ -2,11 +2,17 @@
 
 Here's a quick overview of the current goals and potential enhancements.
 
+The goal is to guess a random number between 1 and n, where n is set at compile time to 5.
+
 ---
 
 ## 🚀 Getting Started
 
 To start the server, run the following command:
+
+## 🔥Important note
+ Everything was developed and tested in devcontainer in vscode.
+ To ensure everything works on other setups, please use devcontainers or 
 
 ```bash
 mix setup

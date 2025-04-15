@@ -27,7 +27,14 @@ defmodule KkalbWeb.Live.Bike.Index do
   end
 
   defp mount_assigns(socket),
-    do: assign(socket, random_number: :rand.uniform(@max_random_number), tries: 0, indicator: nil, old_highscore: 0)
+    do:
+      assign(socket,
+        max_random_number: @max_random_number,
+        random_number: :rand.uniform(@max_random_number),
+        tries: 0,
+        indicator: nil,
+        old_highscore: 0
+      )
 
   @impl Phoenix.LiveView
   def handle_event("save", %{"name" => name}, socket) do
@@ -133,10 +140,10 @@ defmodule KkalbWeb.Live.Bike.Index do
   # this is mainly for debugging, comment out if not needed
   def render_table(assigns) do
     ~H"""
-    <div class="flex justify-center items-center mt-4">
-      <div class="overflow-x-auto bg-csilver">
-        <table class="min-w-full divide-y divide-gray-200 shadow-md rounded-xl overflow-hidden bg-csilver">
-          <thead class="bg-csilver">
+    <div class="flex w-full justify-center items-center mt-4">
+      <div class="w-1/2 overflow-x-auto">
+        <table class="min-w-full divide-y divide-gray-200 shadow-md rounded-xl overflow-hidden bg-cgray">
+          <thead class="bg-cgray">
             <tr>
               <th class="px-6 py-3 text-left text-xs font-semibold text-cwhite uppercase tracking-wider">
                 Name
@@ -149,9 +156,9 @@ defmodule KkalbWeb.Live.Bike.Index do
               </th>
             </tr>
           </thead>
-          <tbody class="bg-csilver divide-y divide-gray-100">
+          <tbody class="bg-cgray divide-y divide-gray-100">
             <%= for user <- @bike_users do %>
-              <tr class="hover:bg-cgray transition-all duration-150">
+              <tr class="transition-all duration-150">
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-cwhite">{user.name}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-sm text-cwhite">{user.highscore}</td>
                 <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-2">
