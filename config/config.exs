@@ -58,7 +58,7 @@ config :kkalb, :github, api_key: ""
 # config :kkalb, Oban,
 #   engine: Oban.Engines.Basic,
 #   queues: [github_fetcher_queue: 10],
-config :kkalb, :issue_storage, Kkalb.IssuesEts
+config :kkalb, :issue_storage, Kkalb.Issues
 config :kkalb, ecto_repos: [Kkalb.Repo]
 
 # Configures Elixir's Logger
