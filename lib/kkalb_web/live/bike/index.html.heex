@@ -18,50 +18,14 @@
       <% end %>
     </.header>
 
-    <%= if @bike_user == nil do %>
-      <div class="flex justify-center w-full">
-        <.form :let={form} for={%{}} phx-submit="save" class="w-3/4 space-y-4">
-          <.input field={form[:name]} label="Name" />
-          <.button
-            phx-disable-with="Saving..."
-            class="w-full bg-blue-600 hover:bg-blue-700 text-cwhite font-semibold py-2 px-4 rounded-lg transition duration-200"
-          >
-            Login
-          </.button>
-        </.form>
-      </div>
-    <% end %>
-
-    <%= if @bike_user do %>
-      <div class="flex justify-center w-full">
-        <.form :let={_form} for={%{}} phx-submit="save" class="w-3/4 space-y-4">
-          <.input
-            label={"The target number is between 1 and #{@max_random_number}"}
-            id="guessed_number"
-            type="number"
-            name="guessed_number"
-            value={0}
-          />
-
-          <%= if @indicator != :match do %>
-            <.button
-              phx-disable-with="Saving..."
-              class="w-full bg-blue-600 hover:bg-blue-700 text-cdark font-semibold py-2 px-4 rounded-lg transition duration-200"
-            >
-              Guess
-            </.button>
-          <% else %>
-            <.button
-              type="button"
-              phx-click="retry"
-              class="w-full bg-green-600 hover:bg-green-700 text-cdark font-semibold py-2 px-4 rounded-lg transition duration-200"
-            >
-              Retry
-            </.button>
-          <% end %>
-        </.form>
-      </div>
-    <% end %>
+    <.live_component
+      module={KkalbWeb.Live.Bike.FormComponent}
+      id="bike-form"
+      bike_user={@bike_user}
+      max_random_number={@max_random_number}
+      indicator={@indicator}
+      guessed_number={@guessed_number}
+    />
 
     <.render_result
       indicator={@indicator}

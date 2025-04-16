@@ -42,13 +42,13 @@ DISABLE_SCHEDULING=true mix bravo
 - Make highscores and users deleteable 
 
 ### 🎨 UI/UX Enhancements
-- Refresh design and improve user experience across the app.
+- ~~Refresh design and improve user experience across the app.~~
 
 ---
 
 ## 📌 Notes
 - Development currently assumes scheduling is disabled using the `DISABLE_SCHEDULING=true` flag.
 - This way you do not need to provide any API_KEY that the overall system requires (besides bravo game).
-- The hosted webside currently has no DB since it is too expensive. Maybe I rent one for a month later. Do not wonder if it does not work in the production system.
+- ~~The hosted webside currently has no DB since it is too expensive. Maybe I rent one for a month later. Do not wonder if it does not work in the production system.~~
 
 ---

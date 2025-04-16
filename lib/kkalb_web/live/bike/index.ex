@@ -33,7 +33,8 @@ defmodule KkalbWeb.Live.Bike.Index do
         random_number: :rand.uniform(@max_random_number),
         tries: 0,
         indicator: nil,
-        old_highscore: 0
+        old_highscore: 0,
+        guessed_number: nil
       )
 
   @impl Phoenix.LiveView
@@ -92,7 +93,8 @@ defmodule KkalbWeb.Live.Bike.Index do
   end
 
   def handle_event("retry", _, socket) do
-    {:noreply, assign(socket, tries: 0, random_number: :rand.uniform(@max_random_number), indicator: nil)}
+    {:noreply,
+     assign(socket, tries: 0, random_number: :rand.uniform(@max_random_number), indicator: nil, guessed_number: nil)}
   end
 
   def handle_event("logout", _, socket) do
@@ -131,9 +133,11 @@ defmodule KkalbWeb.Live.Bike.Index do
     assigns = assign(assigns, result: result)
 
     ~H"""
-    <.header text="">
-      {raw(@result)}
-    </.header>
+    <div class="w-full">
+      <.header class="w-3/4" text="">
+        {raw(@result)}
+      </.header>
+    </div>
     """
   end
 
