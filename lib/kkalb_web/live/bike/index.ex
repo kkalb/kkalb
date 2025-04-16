@@ -141,7 +141,7 @@ defmodule KkalbWeb.Live.Bike.Index do
   def render_table(assigns) do
     ~H"""
     <div class="flex w-full justify-center items-center mt-4">
-      <div class="w-1/2 overflow-x-auto">
+      <div class="w-3/4 overflow-x-auto">
         <table class="min-w-full divide-y divide-gray-200 shadow-md rounded-xl overflow-hidden bg-cgray">
           <thead class="bg-cgray">
             <tr>

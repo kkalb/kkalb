@@ -9,11 +9,7 @@ defmodule Kkalb.Application do
 
   @impl true
   def start(_type, _args) do
-    # when debug is set, all oban logs will be written to the default logger as debug logs.
-    # _ = Oban.Telemetry.attach_default_logger(level: :debug)
-
     # repo = if @env == :prod, do: [], else: [Kkalb.Repo]
-    repo = [Kkalb.Repo]
     disable_scheduling? = Application.get_env(:kkalb, :disable_scheduling)
 
     children =
@@ -25,13 +21,16 @@ defmodule Kkalb.Application do
         # Start the Endpoint (http/https)
         KkalbWeb.Endpoint
         # {Oban, Application.fetch_env!(:kkalb, Oban)},
-      ] ++ repo ++ scheduling(disable_scheduling?)
+      ] ++ use_repo?(true) ++ scheduling(disable_scheduling?)
 
     # See https://hexdocs.pm/elixir/Supervisor.html
     # for other strategies and supported options
     opts = [strategy: :one_for_one, name: Kkalb.Supervisor]
     Supervisor.start_link(children, opts)
   end
+
+  defp use_repo?(true), do: [Kkalb.Repo]
+  # defp use_repo?(false), do: []
 
   defp scheduling("false"), do: [Kkalb.Scheduler, Kkalb.EtsIssuesGenServer]
   defp scheduling("true"), do: []
