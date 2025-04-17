@@ -8,7 +8,7 @@ defmodule Kkalb.Bike.BikeUser do
 
   @primary_key {:id, :binary_id, autogenerate: true}
   typed_schema "bike_users" do
-    field(:highscore, :integer, enforce: true, null: false) :: non_neg_integer()
+    field(:highscore, :integer, enforce: true, null: true) :: non_neg_integer()
     field(:name, :string, enforce: true, null: false) :: binary()
     timestamps()
   end

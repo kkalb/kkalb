@@ -44,7 +44,9 @@ defmodule KkalbWeb.ConnCase do
     end
 
     conn =
-      Phoenix.ConnTest.init_test_session(Phoenix.ConnTest.build_conn(), %{})
+      Phoenix.ConnTest.build_conn()
+      |> Phoenix.ConnTest.init_test_session(%{})
+      |> Map.put(:secret_key_base, KkalbWeb.Endpoint.config(:secret_key_base))
 
     {:ok, conn: conn}
   end

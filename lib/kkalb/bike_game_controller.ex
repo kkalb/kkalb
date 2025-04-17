@@ -27,7 +27,7 @@ defmodule Kkalb.BikeGameController do
       "You guess was too low. <br /> You already tried 1 time(s)"
 
   """
-  @spec game_result_to_html(atom(), integer(), integer()) :: binary()
+  @spec game_result_to_html(ind :: atom(), tries :: integer(), highscore :: integer()) :: result :: binary()
   def game_result_to_html(nil, _tries, _highscore) do
     ""
   end

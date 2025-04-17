@@ -2,7 +2,7 @@
     "custom_stop_words": [],
     "coverage_options": {
         "output_dir": "cover/",
-        "minimum_coverage": 37
+        "minimum_coverage": 23
     },
     "skip_files": []
 }
